@@ -1,2 +1,0 @@
-# haram
-study concentration timer

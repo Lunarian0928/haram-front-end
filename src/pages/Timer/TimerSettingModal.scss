@@ -1,0 +1,30 @@
+@import "../../Color.scss";
+
+.timer-setting-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 0 12px;
+
+    color: $text-color;
+}
+
+div#timer-setting-modal h2{
+    color: black;
+}
+
+div#title-input {
+    display: flex;
+    flex-direction: column;
+}
+
+div#title-input input {
+    padding: 12px; 
+}

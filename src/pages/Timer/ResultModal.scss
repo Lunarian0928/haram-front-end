@@ -1,0 +1,10 @@
+div#loopy-img{
+    width: 320px;
+    height: 240px;
+    overflow: hidden;
+}
+
+div#loopy-img img {
+    width: 100%;
+    object-fit: cover;
+}

@@ -1,0 +1,11 @@
+@import '../../../Color.scss';
+
+div#banner {
+    width: 728px;
+    height: 90px;
+    background-color: $light-grey-color;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

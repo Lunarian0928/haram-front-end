@@ -1,0 +1,29 @@
+@import "../../../Color.scss";
+
+header#main-header {
+    padding: 8px 40px;
+}
+
+header#main-header h1 {
+    font-size: 24px;
+}
+header#main-header nav {
+    display: flex;
+}
+
+header#main-header nav a {
+    font-size: 18px;
+}
+
+
+header#main-header nav a:nth-child(2) {
+    margin: 0 16px;
+}
+
+header#main-header .icon {
+    color: $icon-color;
+}
+
+header#main-header #user-div a:first-child {
+    margin-right: 16px;  
+}

@@ -1,0 +1,50 @@
+@import "./Color.scss";
+
+@font-face {
+  font-family: 'InkLipquid';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/InkLipquid.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.App {
+  background-image: url('./background/night_sky_with_stars.jpeg');
+  background-size: cover;
+  
+  text-align: center;
+  height: 100vh;
+}
+
+h1, h2, p, label {
+  color: $white-text-color; 
+  font-family: InkLipquid;
+}
+
+input { 
+  color: $white-text-color; 
+}
+a {
+  text-decoration: none;
+  color: $white-text-color; 
+
+  font-family: InkLipquid;
+}
+
+button {
+    // Reset default button styles
+    appearance: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    background: none;
+    cursor: pointer;
+    font-family: InkLipquid;
+    color: $white-text-color; 
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

@@ -1,0 +1,41 @@
+@import 'react-calendar/dist/Calendar.css';
+@import '../../Color.scss';
+
+.react-calendar {
+    width: 400px;
+    background-color: transparent;
+    border: none;
+}
+
+.react-calendar abbr{
+    color: $white-text-color;
+}
+.react-calendar__navigation { // 네비게이션
+    display: none;
+}
+
+.react-calendar__tile { // 날짜 버튼
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: transparent;
+    color: $white-text-color;
+    border-radius: 50%; /* 원형 설정 */
+}
+
+.react-calendar__tile--now abbr { // 날짜 글씨
+    font-weight: bold;
+    color: red;
+}
+
+.react-calendar__month-view__days__day--neighboringMonth { // 이전/다음 달 날짜 버튼
+    opacity: 0;
+    pointer-events: none;
+}
+
+.dot { // 집중 여부 표시 점
+    width: 16px;
+    height: 16px;
+    background-color: green;
+    border-radius: 50%; 
+}

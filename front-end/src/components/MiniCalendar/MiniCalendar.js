@@ -17,9 +17,6 @@ function MiniCalendar() {
                 formatDay={(locale, date) => moment(date).format("D")}
                 tileContent={<div className="dot"></div>}
             />
-            <div>
-                
-            </div>
         </div>
     );
 }

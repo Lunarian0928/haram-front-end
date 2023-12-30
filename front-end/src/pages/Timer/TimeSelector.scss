@@ -1,29 +1,18 @@
-#time-selector > div {
-    display: flex;
-    align-items: center;
-    
-    background-color: rgba(255, 255, 255, 0.3); /* 투명한 배경 색 */
-    border-radius: 10px; /* 모서리를 둥글게 만듦 */
-    backdrop-filter: blur(10px); /* 배경을 흐리게 만들어 유리 효과를 내도록 함 */
-    border: 1px solid rgba(255, 255, 255, 0.4); /* 테두리 스타일 및 투명도 설정 */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
-}
+#time-selector {
+    > div {
+        display: flex;
+        align-items: center;
+    }
 
-#time-selector select {
-    padding: 12px;
-    text-align-last: center;
-    text-align: center;
-    -ms-text-align-last: center;
-    -moz-text-align-last: center;
+    select {
+        padding: 12px;
+        text-align: center;
+        text-align-last: center;
+        -ms-text-align-last: center;
+        -moz-text-align-last: center;
+    }
 
-    background-color: rgba(255, 255, 255, 0.2); /* 투명한 배경 색 */
-    backdrop-filter: blur(10px); /* 배경을 흐리게 만들어 유리 효과를 내도록 함 */
-    border: 1px solid rgba(255, 255, 255, 0.3); /* 테두리 스타일 및 투명도 설정 */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
-    
-    transform: rotateX(180deg); /* 아래로 펼치기 */
-}
-
-#time-selector button {
-    padding: 0 4px;
-}
+    button {
+        padding: 0 4px;
+    }
+}  

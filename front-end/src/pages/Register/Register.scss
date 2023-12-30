@@ -1,4 +1,4 @@
-div#login {
+div#register {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -8,8 +8,10 @@ div#login {
     padding-bottom: 60px;
     > #input-group {
         padding: 0 40px;
+        margin-bottom: 24px;
 
         > .input-div {
+            
             > .user-input > .input-container > input {
                 border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             } 
@@ -19,26 +21,13 @@ div#login {
             } 
         }
     }
-
+    
     > button {
         width: calc(100% - 80px);
-        margin: 20px 40px 0 40px;
+        margin: 0 40px 0 40px;
         padding: 12px 0;
 
         font-size: 20px;
         font-weight: 700;
     }
-
-    > div#links {
-        padding: 20px 40px;
-        margin-top: 20px;
-        > a:nth-child(2) {
-            &:before,
-            &:after {
-                margin: 0 12px;
-                content: "|";
-            }
-        }
-    }
-    
 }

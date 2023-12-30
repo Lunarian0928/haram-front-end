@@ -1,0 +1,41 @@
+@import "../../../Color.scss";
+.user-input {
+    .input-container {
+        position: relative;
+
+        input {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            padding-left: 30px;
+            background-color: transparent;
+            border: none;
+        }
+
+        input::placeholder {
+            color: $white-text-color;
+        }
+        .toggle-button,
+        .check-duplicate-button,
+        .send-email-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .check-duplicate-button {
+            color: $white-text-color;
+        }
+
+        .icon {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
+}

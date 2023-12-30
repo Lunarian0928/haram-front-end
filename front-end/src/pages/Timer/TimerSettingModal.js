@@ -11,7 +11,7 @@ function TimerSettingModal({modalIsOpen, closeModal, updateDuration, updateTitle
         onRequestClose={closeModal}
         contentLabel="Timer Setting Modal"
         appElement={document.getElementById('root')}
-        className="timer-setting-modal" // 커스텀 클래스를 추가합니다.
+        className="timer-setting-modal glass" // 커스텀 클래스를 추가합니다.
         overlayClassName="timer-setting-overlay" // 오버레이에 대한 커스텀 클래스를 추가합니다.
       >
         <header>

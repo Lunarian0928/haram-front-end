@@ -32,8 +32,9 @@ function ResultModal({modalIsOpen, closeModal}) {
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
-        contentLabel="Timer Setting Modal"
+        contentLabel="Result Setting Modal"
         appElement={document.getElementById('root')}
+        className="result-setting-modal glass" 
       >
         <header>
           <h2>짤 획득!</h2>

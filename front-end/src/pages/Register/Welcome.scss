@@ -1,0 +1,17 @@
+div#welcome {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 480px;
+    > button {
+
+        width: calc(100% - 80px);
+        margin: 0 40px 60px 40px;
+        padding: 12px 0;
+
+        font-size: 20px;
+        font-weight: 700;
+    }
+}   

@@ -6,9 +6,9 @@ function TimeSelector({ label, value, onChange, max, onIncrement, onDecrement })
     return (
         <div id="time-selector">
             <label>{label}</label>
-            <div>
+            <div className="glass">
                 <button onClick={() => onIncrement(value, max, onChange)}><MdAdd size={24}/></button>
-                <select value={value} onChange={(e) => onChange(Number(e.target.value))}>
+                <select className="glass" value={value} onChange={(e) => onChange(Number(e.target.value))}>
                     {Array.from({ length: max }).map((_, index) => (
                         <option key={index} value={index}>
                             {index}

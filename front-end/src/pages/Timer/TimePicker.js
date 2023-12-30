@@ -26,7 +26,8 @@ const TimePicker = ({ updateDuration, updateTitle }) => {
         <div id="time-picker">
             <div id="title-input">
                 <label>제목</label>
-                <input 
+                <input
+                    className="glass" 
                     value={title} 
                     type="text" 
                     placeholder="타이머 제목" 

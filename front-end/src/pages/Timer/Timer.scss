@@ -1,7 +1,11 @@
 @import "../../Color.scss";
 
 div#timer {
-    height: calc(100vh - 77.66px);
+    width: calc(100vw - 151px);
+    height: calc(100vh - 59.65px);
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
 }
 
 div#timer-title {
@@ -20,7 +24,7 @@ div#timer-title {
     height: 92px;
     padding: 24px;
 
-    position: fixed;
+    position: absolute;
     bottom: 48px;
     left: 50%;
     transform: translate(-50%, 0%);
@@ -28,7 +32,7 @@ div#timer-title {
 }
 
 div#basic-timer {
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

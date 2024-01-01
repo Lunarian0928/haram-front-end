@@ -1,8 +1,11 @@
 import './App.scss';
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { setDuration, setIsRunning, resetTimer } from './redux/actions';
 
 import MainHeader from './components/commual/MainHeader/MainHeader'; // 메인 헤더
+import SideBar from './components/commual/SideBar/SideBar'; // 사이드 바
 import Home from './pages/Home/Home'; // 홈 페이지
 import Timer from './pages/Timer/Timer'; // 타이머 페이지
 import Login from './pages/Login/Login'; // 로그인 페이지
@@ -17,6 +20,9 @@ import MyPoint from './pages/MyPage/MyPoint';
 import MyGiftcon from './pages/MyPage/MyGiftcon';
 
 function App() {
+  const dispatch = useDispatch();
+  const { initialDuration, duration, isRunning } = useSelector((state) => state.timer);
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInId, setLoggedInId] = useState("");
 
@@ -49,10 +55,63 @@ function App() {
     }
   }, []); // 빈 배열을 전달하여 컴포넌트가 처음 마운트될 때만 실행되도록 함
 
+
+  useEffect(() => {
+    // 타이머 시작 여부를 localStorage로 불러오기
+    const storedIsRunning = localStorage.getItem('isRunning') === 'true'; 
+    dispatch(setIsRunning(storedIsRunning)); // 타이머 시작 여부를 state로 저장하기
+    
+    const storedDuration = JSON.parse(localStorage.getItem('duration'));
+    if (storedDuration) {
+      dispatch(setDuration(storedDuration)); // 지금 타이머 시간으로 초기화
+    } else {
+      dispatch(setDuration(initialDuration)); // 기본 설정 시간으로 타이머 시간을 초기화
+    }
+  }, [dispatch, initialDuration]);
+  
+  // 타이머 재생
+  useEffect(() => { 
+    let interval;
+    if (isRunning) {
+      //  타이머 시작 여부를 localStorage에 저장하기
+      localStorage.setItem('isRunning', 'true'); 
+      interval = setInterval(() => {
+        const nextDuration = calculateNextDuration(duration);
+        dispatch(setDuration(nextDuration));
+        //  타이머 시간을 localStorage에 저장하기
+        localStorage.setItem('duration', JSON.stringify(nextDuration));
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [dispatch, isRunning, duration]);
+  
+  const calculateNextDuration = (prevDuration) => {
+    if (prevDuration.sec === 0) {
+      if (prevDuration.min === 0) {
+        return {
+          hr: prevDuration.hr - 1,
+          min: 59,
+          sec: 59,
+        };
+      }
+      return {
+        hr: prevDuration.hr,
+        min: prevDuration.min - 1,
+        sec: 59,
+      };
+    }
+    return {
+      hr: prevDuration.hr,
+      min: prevDuration.min,
+      sec: prevDuration.sec - 1,
+    };
+  };
+
   return (
     <div className="App">
       <BrowserRouter>
         <MainHeader isLoggedIn={isLoggedIn} loggedInId={loggedInId} logout={logout} />
+        <SideBar />
         <Routes>
           <Route path="/" element={<Home />} /> {/* 홈 페이지 */}
           <Route path="/timer/*" element={<Timer />} /> {/* 타이머 페이지 */}

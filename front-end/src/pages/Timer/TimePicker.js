@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import './TimePicker.scss';
 import TimeSelector from './TimeSelector.js';
-const TimePicker = ({ updateDuration, updateTitle }) => {
+
+import { useDispatch } from 'react-redux';
+import { setInitialDuration } from '../../redux/actions';
+
+const TimePicker = ({ updateTitle, closeModal }) => {
+    const dispatch = useDispatch();
+    
     const [hr, setHr] = useState(0);
     const [min, setMin] = useState(0);
     const [sec, setSec] = useState(0);
@@ -41,8 +47,9 @@ const TimePicker = ({ updateDuration, updateTitle }) => {
             </div>
             <button             
                     onClick={() => {
-                        updateDuration({ hr: hr, min: min, sec: sec });
+                        dispatch(setInitialDuration({ hr: hr, min: min, sec: sec }));
                         updateTitle(title);
+                        closeModal();
                     }}>
                     선택
             </button>

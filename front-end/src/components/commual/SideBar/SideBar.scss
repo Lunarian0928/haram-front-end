@@ -1,0 +1,10 @@
+div#side-bar {
+    width: 150px;
+    height: 100%;
+    
+    display: flex;
+    flex-direction: column;
+    
+    position: fixed;
+    right: 0px;
+}

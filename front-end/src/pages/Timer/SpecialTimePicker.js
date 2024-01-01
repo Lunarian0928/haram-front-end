@@ -1,6 +1,8 @@
+import { useDispatch } from 'react-redux';
+import { setInitialDuration } from '../../redux/actions';
 import './SpecialTimePicker.scss';
-
-const SpecialTimePicker = ({ updateDuration, updateTitle }) => {
+function SpecialTimePicker({ updateTitle, closeModal }) {
+    const dispatch = useDispatch();
     class Time {
         constructor(hr = 0, min = 0, sec = 0) {
             this.hr = hr;
@@ -38,8 +40,9 @@ const SpecialTimePicker = ({ updateDuration, updateTitle }) => {
                                     time.min > 0 ? `${time.min}분` : time.sec > 0 ? '1분' : ''
                                 } ${time.sec > 0 ? `${time.sec}초` : ''} 타이머`;
 
-                                updateDuration({ hr: time.hr, min: time.min, sec: time.sec });
+                                dispatch(setInitialDuration({ hr: time.hr, min: time.min, sec: time.sec }));
                                 updateTitle(formattedTitle);
+                                closeModal();
                             }}
                         >
                             {time.hr > 0 ? `${time.hr}시간` : ''}

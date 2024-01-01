@@ -1,5 +1,12 @@
 @import "../../../Color.scss";
 
+#main-header {
+    position: fixed;
+    left: 0px;
+    width: calc(100% - 150px - 80px);
+    padding: 0 40px;
+}
+
 header#main-header h1 {
     font-size: 24px;
 }

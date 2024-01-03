@@ -1,13 +1,15 @@
 import './App.scss';
-import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setDuration, setIsRunning, resetTimer } from './redux/actions';
+import { setInitialDuration, setDuration, setIsRunning } from './redux/actions';
+import ReactAudioPlayer from 'react-audio-player';
 
 import MainHeader from './components/commual/MainHeader/MainHeader'; // 메인 헤더
 import SideBar from './components/commual/SideBar/SideBar'; // 사이드 바
 import Home from './pages/Home/Home'; // 홈 페이지
 import Timer from './pages/Timer/Timer'; // 타이머 페이지
+import Clock from './pages/Clock/Clock'; // 시계 페이지
 import Login from './pages/Login/Login'; // 로그인 페이지
 import Register from './pages/Register/Register'; // 회원가입 페이지
 import Welcome from './pages/Register/Welcome';
@@ -26,6 +28,14 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInId, setLoggedInId] = useState("");
 
+  const audioRef = useRef(null);
+  const [timerEnded, setTimerEnded] = useState(false);
+  
+  // 자명종 알람 반복 횟수
+  // const [reminderAlarmRepeatCount, setReminderAlarmRepeatCount] = useState(0);
+  // 타이머 알람 반복 횟수
+  const [, setTimerAlarmRepeatCount] = useState(0);
+  
   const login = (id) => {
     setLoggedInId(id);
     setIsLoggedIn(true);
@@ -62,12 +72,20 @@ function App() {
     dispatch(setIsRunning(storedIsRunning)); // 타이머 시작 여부를 state로 저장하기
     
     const storedDuration = JSON.parse(localStorage.getItem('duration'));
-    if (storedDuration) {
+    if (storedDuration && (storedDuration.hr !== 0 && storedDuration.min !== 0 && storedDuration.sec !== 0)) {
       dispatch(setDuration(storedDuration)); // 지금 타이머 시간으로 초기화
     } else {
-      dispatch(setDuration(initialDuration)); // 기본 설정 시간으로 타이머 시간을 초기화
+      const storedInitialDuration = JSON.parse(localStorage.getItem('initialDuration'));
+      if (storedInitialDuration) {
+        dispatch(setInitialDuration(storedInitialDuration));
+        dispatch(setDuration(storedInitialDuration));
+      }
+      else {
+        dispatch(setDuration(initialDuration));
+      }
     }
-  }, [dispatch, initialDuration]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
   
   // 타이머 재생
   useEffect(() => { 
@@ -86,6 +104,10 @@ function App() {
   }, [dispatch, isRunning, duration]);
   
   const calculateNextDuration = (prevDuration) => {
+    if (prevDuration.hr === 0 && prevDuration.min === 0 && prevDuration.sec === 0) {
+      setTimerEnded(true);
+      return prevDuration;
+    }
     if (prevDuration.sec === 0) {
       if (prevDuration.min === 0) {
         return {
@@ -107,13 +129,52 @@ function App() {
     };
   };
 
+  useEffect(() => {
+    const playAlarm = () => {
+      const audioElement = audioRef.current.audioEl.current;
+      const handleAudioEnd = () => {
+        audioElement.removeEventListener('ended', handleAudioEnd);
+  
+        setTimerAlarmRepeatCount((prevCnt) => {
+          if (prevCnt < 2) {
+            audioElement.currentTime = 0;
+            audioElement.play();
+            audioElement.addEventListener('ended', handleAudioEnd);
+          } else {
+            setTimerEnded(false);
+          }
+          return prevCnt + 1;
+        });
+      };
+  
+      audioElement.addEventListener('ended', handleAudioEnd);
+      audioElement.play();
+    };
+  
+    if (timerEnded) {
+      dispatch(setIsRunning(false));
+      localStorage.setItem('isRunning', 'false');
+  
+      setTimerAlarmRepeatCount(0);
+      playAlarm();
+    }
+  }, [dispatch, timerEnded]);
+  
+
   return (
     <div className="App">
       <BrowserRouter>
         <MainHeader isLoggedIn={isLoggedIn} loggedInId={loggedInId} logout={logout} />
         <SideBar />
+        <ReactAudioPlayer
+          ref={audioRef}
+          src={`${process.env.PUBLIC_URL}/audio/scene_change5.mp3`}
+          autoPlay={false}
+          controls={false}
+        />
         <Routes>
           <Route path="/" element={<Home />} /> {/* 홈 페이지 */}
+          <Route path="/clock" element={<Clock /> } /> {/* 시계 페이지 */}
           <Route path="/timer/*" element={<Timer />} /> {/* 타이머 페이지 */}
           <Route path="/login" element={<Login login={login} />} /> {/* 로그인 페이지 */}
           <Route path="/register" element={<Register />} /> {/* 회원가입 페이지 */}

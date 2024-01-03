@@ -20,7 +20,7 @@ function Welcome() {
                 console.error(err);
                 navigate("/");
             });
-    }, [name]); 
+    }, [name, navigate]); 
 
     return (
         <div id="welcome" className="glass">

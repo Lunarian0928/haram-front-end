@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { setInitialDuration } from '../../redux/actions';
+import { setInitialDuration, setDuration } from '../../redux/actions';
 import './SpecialTimePicker.scss';
 function SpecialTimePicker({ updateTitle, closeModal }) {
     const dispatch = useDispatch();
@@ -40,7 +40,12 @@ function SpecialTimePicker({ updateTitle, closeModal }) {
                                     time.min > 0 ? `${time.min}분` : time.sec > 0 ? '1분' : ''
                                 } ${time.sec > 0 ? `${time.sec}초` : ''} 타이머`;
 
+                                localStorage.setItem('initialDuration', JSON.stringify({ hr: time.hr, min: time.min, sec: time.sec }));
+
+                                // 현재 initialDuration을 Redux 상태로 디스패치
                                 dispatch(setInitialDuration({ hr: time.hr, min: time.min, sec: time.sec }));
+                                dispatch(setDuration({ hr: time.hr, min: time.min, sec: time.sec }));
+
                                 updateTitle(formattedTitle);
                                 closeModal();
                             }}

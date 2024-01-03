@@ -5,7 +5,6 @@ import SpecialTimePicker from "./SpecialTimePicker";
 import './TimerSettingModal.scss';
 
 function TimerSettingModal({modalIsOpen, closeModal, updateTitle}) {
-  
   return (
     <div id="timer-setting-modal">
       <Modal

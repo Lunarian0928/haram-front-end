@@ -1,0 +1,39 @@
+div#basic-clock {
+    width: 960px;
+    padding: 40px;
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    transform: translate(-50%, 50%);
+
+    > div#date {
+        display: flex;
+        justify-content: space-between;
+
+        border-bottom: 1px solid white;
+    }
+    > div#time {
+        display: flex;
+        align-items: center;
+
+        height: 313.3px;  
+        padding: 20px;
+        > div {
+            padding: 0 60px 20px 60px;
+            &:nth-child(2) {
+                margin: 0 40px;
+            }
+            > p {
+                &:first-child {
+                    font-size: 72px;
+                    font-weight: 700;
+                    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+                }
+                &:last-child {
+                    font-size: 30px;
+                    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+                }
+            }
+        }
+    }
+}

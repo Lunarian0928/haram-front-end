@@ -3,30 +3,27 @@ import './TimePicker.scss';
 import TimeSelector from './TimeSelector.js';
 
 import { useDispatch } from 'react-redux';
-import { setInitialDuration } from '../../redux/actions';
+import { setInitialDuration, setDuration } from '../../redux/actions';
 
 const TimePicker = ({ updateTitle, closeModal }) => {
     const dispatch = useDispatch();
-    
+
     const [hr, setHr] = useState(0);
     const [min, setMin] = useState(0);
     const [sec, setSec] = useState(0);
     const [title, setTitle] = useState("타이머");
 
     const handleIncrement = (value, max, onChange) => {
-        console.log("증가 버튼 누름");
         if (value < max) {
             onChange((prev) => prev + 1);
         }
     };
-    
+
     const handleDecrement = (value, onChange) => {
-        console.log("감소 버튼 누름");
         if (value > 0) {
             onChange((prev) => prev - 1);
         }
     };
-    
 
     return (
         <div id="time-picker">
@@ -45,13 +42,18 @@ const TimePicker = ({ updateTitle, closeModal }) => {
                 <TimeSelector label="분" value={min} onChange={setMin} onIncrement={handleIncrement} onDecrement={handleDecrement} max={60} />
                 <TimeSelector label="초" value={sec} onChange={setSec} onIncrement={handleIncrement} onDecrement={handleDecrement} max={60} />
             </div>
-            <button             
-                    onClick={() => {
-                        dispatch(setInitialDuration({ hr: hr, min: min, sec: sec }));
-                        updateTitle(title);
-                        closeModal();
-                    }}>
-                    선택
+            <button onClick={() => {
+                // 현재 initialDuration을 localStorage에 저장
+                localStorage.setItem('initialDuration', JSON.stringify({ hr, min, sec }));
+
+                // 현재 initialDuration을 Redux 상태로 디스패치
+                dispatch(setInitialDuration({ hr, min, sec }));
+                dispatch(setDuration({ hr, min, sec }));
+                // 나머지 로직 실행
+                updateTitle(title);
+                closeModal();
+            }}>
+                선택
             </button>
         </div>
     );

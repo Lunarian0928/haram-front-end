@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setDuration, setIsRunning, resetTimer } from '../../redux/actions';
+import { setIsRunning, resetTimer } from '../../redux/actions';
 import './BasicTimer.scss';
 function BasicTimer({openTimerSettingModal}) {
   const dispatch = useDispatch();
-  const { initialDuration, duration, isRunning } = useSelector((state) => state.timer);
+  const {duration, isRunning } = useSelector((state) => state.timer);
 
   const toggleTimer = () => {
     dispatch(setIsRunning(!isRunning));
@@ -18,7 +17,7 @@ function BasicTimer({openTimerSettingModal}) {
 
   return (
     <div id="basic-timer">
-      <div id="clock">
+      <div id="time">
         <span>{String(duration.hr).padStart(2, '0')}</span>
         <span>:</span>
         <span>{String(duration.min).padStart(2, '0')}</span>

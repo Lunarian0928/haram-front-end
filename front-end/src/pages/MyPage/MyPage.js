@@ -24,7 +24,7 @@ function MyPage({id}) {
             <h1>마이페이지</h1>
             <div id="profile-div" className="glass">
                 <div id="profile-img" className="glass">
-                    <img src="" />
+                    <img src="" alt="" />
                 </div>
                 <div id="id-info">
                     <div>

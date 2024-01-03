@@ -1,7 +1,4 @@
 // basicTimerReducer.js
-
-import produce from 'immer';
-
 const initialState = {
   initialDuration: {
     hr: 0,

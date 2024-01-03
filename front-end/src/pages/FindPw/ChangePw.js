@@ -11,7 +11,7 @@ function ChangePw() {
     const location = useLocation();
     const { userId } = location.state || {};
 
-    const [id, setId] = useState(userId || "");
+    const [id, ] = useState(userId || "");
     const [pw, setPw] = useState(""); // 패스워드
     const [pwConfirm, setPwConfirm] = useState("");
     const [pwVisible, setPwVisible] = useState(false);
@@ -62,8 +62,8 @@ function ChangePw() {
         axios.post("/api/user/change_password", {
             userId: id,
             password: pw,   
-        }).
-        then((res) => {
+        })
+        .then((res) => {
             if (res.data) navigate("/change_success");
             else console.log("비밀번호 변경 실패");
         })

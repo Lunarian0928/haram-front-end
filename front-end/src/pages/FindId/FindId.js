@@ -1,6 +1,6 @@
 import './FindId.scss';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';  // Import useNavigate
+import { Link } from 'react-router-dom';  // Import useNavigate
 import axios from 'axios';
 import { FaUser } from "react-icons/fa";
 import UserInput from '../../components/commual/UserInput/UserInput';
@@ -10,7 +10,6 @@ function FindId() {
     const [foundUserIds, setFoundUserIds] = useState([]);
     const [attempted, setAttempted] = useState(false);
     const [selectableUserIds, setSelectableUserIds] = useState([]);
-    const navigate = useNavigate();  // Use useNavigate instead of useHistory
 
     const updateName = (e) => {
         const value = e.currentTarget.value;

@@ -4,7 +4,7 @@ import { MdHorizontalRule } from "react-icons/md";
 import './TimeSelector.scss';
 function TimeSelector({ label, value, onChange, max, onIncrement, onDecrement }) {
     return (
-        <div id="time-selector">
+        <div className="time-selector">
             <label>{label}</label>
             <div className="glass">
                 <button onClick={() => onIncrement(value, max, onChange)}><MdAdd size={24}/></button>

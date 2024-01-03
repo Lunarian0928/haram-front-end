@@ -6,7 +6,7 @@ import './Login.scss';
 import axios from 'axios';
 function Login({login}) {
     const [id, setId] = useState("");
-    const [isIdDuplicate, setIsIdDuplicate] = useState(false);
+    const [, setIsIdDuplicate] = useState(false);
     const [pw, setPw] = useState("");
     const [pwVisible, setPwVisible] = useState(false);
 

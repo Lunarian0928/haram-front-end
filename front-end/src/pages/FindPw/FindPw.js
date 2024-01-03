@@ -110,12 +110,12 @@ function FindPw() {
 
     const navigate = useNavigate();
     const resetPassword = () => {
-        if ((!attempted) || (code != authCode)) {
+        if ((!attempted) || (code !== authCode)) {
             if (!attempted) {
                 setErrs(prevErrs => ({...prevErrs, code: "인증을 시도해야 합니다"}));
                 return;
             }
-            if (code != authCode) {
+            if (code !== authCode) {
                 setErrs(prevErrs => ({...prevErrs, code: "인증 코드가 일치하지 않습니다"}));
                 return;
             }

@@ -1,0 +1,49 @@
+div#reset-pw {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    width: 480px;
+    padding-bottom: 60px;
+    
+    > .input-group {
+        padding: 0 40px;
+
+        > .input-div {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            
+            > .user-input > .input-container > input {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            } 
+
+            > .user-input:last-child > .input-container > input {
+                border-bottom: none;
+            } 
+        }
+    }
+    > button {
+        background-color: rgba(255, 255, 255, 0.3); /* 투명한 배경 색 */
+        border-radius: 10px; /* 모서리를 둥글게 만듦 */
+        backdrop-filter: blur(10px); /* 배경을 흐리게 만들어 유리 효과를 내도록 함 */
+        border: 1px solid rgba(255, 255, 255, 0.4); /* 테두리 스타일 및 투명도 설정 */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+
+        width: calc(100% - 80px);
+        margin: 0 40px 0 40px;
+        padding: 12px 0;
+
+        font-size: 20px;
+        font-weight: 700;
+    }
+}

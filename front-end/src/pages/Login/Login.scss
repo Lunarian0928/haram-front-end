@@ -1,11 +1,13 @@
 div#login {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
 
     width: 480px;
+    padding: 0 40px;
+    margin: 0 calc((100vw - 151px - 480px - 80px) / 2);
     padding-bottom: 60px;
+    
     > #input-group {
         padding: 0 40px;
 

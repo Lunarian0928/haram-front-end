@@ -1,5 +1,4 @@
-import { MdAdd } from "react-icons/md";
-import { MdHorizontalRule } from "react-icons/md";
+import { MdAdd, MdHorizontalRule } from "react-icons/md";
 
 import './TimeSelector.scss';
 function TimeSelector({ label, value, onChange, max, onIncrement, onDecrement }) {

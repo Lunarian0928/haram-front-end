@@ -38,9 +38,6 @@ function Clock() {
 
     useEffect(() => {
         let interval;
-
-        setLoading(true);
-        console.log("로딩중");
         interval = setInterval(() => {
             const updatedDate = new Date().toLocaleString('en-US', { timeZone });
             setCurrentTime({
@@ -53,8 +50,6 @@ function Clock() {
                 sec: new Date(updatedDate).getSeconds(),
             });
         }, 1000);
-        
-        setLoading(false);
 
         return () => clearInterval(interval);
     }, [timeZone]);

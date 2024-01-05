@@ -1,0 +1,23 @@
+@import '../../Color.scss';
+
+div.repetition-setting-modal {
+    display: flex;
+    flex-direction: column;
+
+    position: absolute; 
+    left: 0;
+    bottom: 0;
+
+    width: 420px;
+    padding: 0 40px;
+    margin: 0 calc((100vw - 151px - 420px - 80px) / 2);
+    
+    top: 50%;
+    transform: translateY(-50%);
+
+    > button {
+        font-size: 24px;
+        font-weight: 700;
+    }
+    
+}

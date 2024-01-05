@@ -1,4 +1,3 @@
-// basicTimerReducer.js
 const initialState = {
   initialDuration: {
     hr: 0,

@@ -1,0 +1,98 @@
+@import '../../Color.scss';
+
+div.day-setting-calendar-modal {
+    display: flex;
+    flex-direction: column;
+
+    position: absolute; 
+    left: 0;
+    bottom: 0;
+
+    width: 500px;
+    margin: 0 calc((100vw - 151px - 500px) / 2);
+    
+    top: 50%;
+    transform: translateY(-50%);
+    > div.react-calendar {
+        background-color: transparent;
+        border: none;
+        
+        width: 100%;
+        
+        > div.react-calendar__navigation {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
+            > button.react-calendar__navigation__label {
+                background-color: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+        }
+
+        div.react-calendar__month-view__weekdays__weekday {
+            color: $white-text-color;
+            > abbr[title] {
+                text-decoration: none;
+                -webkit-text-decoration: none;
+            }
+        }
+
+        // 클릭하지 못하는 타일
+        button.react-calendar__tile:disabled {
+            background-color: transparent;
+            opacity: 0.5;
+        }
+
+        // 오늘 날짜 타일 
+        button.react-calendar__tile--now {
+            background-color: transparent;
+        }
+        
+        // hover, focus 
+        button.react-calendar__tile:enabled:hover, .react-calendar__tile:enabled:focus {
+            background-color: transparent;
+        }
+
+        // 선택한 날짜 타일
+        button.react-calendar__tile--active {
+            background-color: transparent;
+            font-weight: 700;
+            color: $white-text-color;
+            opacity: 1;
+
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            
+        }
+
+        // 이웃하는 달 날짜 안 보이게 설정
+        .react-calendar__month-view__days__day--neighboringMonth {
+            opacity: 0;
+        }
+
+        // 주말 글자 색상 초기화
+        .react-calendar__month-view__days__day--weekend {
+            color: $white-text-color;
+        }
+
+        span {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        
+    }
+    > div.button-list {
+        width: 100%; 
+        > button {
+            width: 50%;
+            padding: 12px;
+            &:first-child {
+                border-right: 1px solid rgba(255, 255, 255, 0.2);
+            }
+        }
+    }
+}
+

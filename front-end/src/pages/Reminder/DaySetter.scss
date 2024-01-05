@@ -1,0 +1,47 @@
+div#day-setter {
+    padding: 12px;
+
+    > button {
+        padding: 12px;
+        margin-right: 12px;
+        font-weight: 700;
+        opacity: 0.5;
+
+        &.active {
+            opacity: 1;
+        }
+    }
+    
+    > div#reminder-day {
+        display: flex;
+        justify-content: space-between;
+
+        > p#day-notice {
+            span {
+                &:first-child {
+                    &:before {
+                        content: " "
+                    }
+                }
+                &:last-child {
+                    &:after {
+                        content: ""
+                    }
+                }
+    
+                &:after {
+                    content: ", "
+                }
+            }
+        }
+
+        > button#calendar-button {
+            display: flex;
+            align-items: center;
+            > svg {
+                margin-right: 12px;
+            }
+        }
+    }
+    
+}

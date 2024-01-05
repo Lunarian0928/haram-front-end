@@ -1,0 +1,54 @@
+div#reminder {
+    width: calc(100vw - 151px - 480px);
+    height: calc(100vh - 59.65px);
+    padding: 0 240px;
+
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    
+    overflow-y: scroll;
+
+    > button#add-reminder  {
+        padding: 24px;
+        border-radius: 50%;
+
+        position: fixed;
+        bottom: 48px;
+    }
+
+    > div#reminder-list {
+        > div.reminder-element {
+            padding: 20px 40px;
+        
+            > header {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
+                display: flex;
+                justify-content: space-between;
+                align-items: center;    
+
+                > div.button-list {
+                    > button:first-child {
+                        margin-right: 12px;
+                    }
+                }
+            }
+            
+            > div.reminder-content {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                > div.reminder-info {
+                    text-align: left;
+                    > p:first-child {
+                        font-weight: 700;
+                        font-size: 36px;
+                    }
+                }
+            }
+        }
+    }
+    
+}

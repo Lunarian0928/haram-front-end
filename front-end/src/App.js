@@ -8,6 +8,8 @@ import ReactAudioPlayer from 'react-audio-player';
 import MainHeader from './components/commual/MainHeader/MainHeader'; // 메인 헤더
 import SideBar from './components/commual/SideBar/SideBar'; // 사이드 바
 import Home from './pages/Home/Home'; // 홈 페이지
+import Reminder from './pages/Reminder/Reminder'; // 알람 페이지
+import AddReminder from './pages/Reminder/AddReminder'; // 알람 추가 페이지
 import Timer from './pages/Timer/Timer'; // 타이머 페이지
 import Clock from './pages/Clock/Clock'; // 시계 페이지
 import Login from './pages/Login/Login'; // 로그인 페이지
@@ -174,8 +176,10 @@ function App() {
         />
         <Routes>
           <Route path="/" element={<Home />} /> {/* 홈 페이지 */}
+          <Route path="/reminder" element={<Reminder />} /> {/* 알람 페이지 */}
+          <Route path="/add_reminder" element={<AddReminder />} /> {/* 알람 추가 페이지 */}
           <Route path="/clock" element={<Clock /> } /> {/* 시계 페이지 */}
-          <Route path="/timer/*" element={<Timer />} /> {/* 타이머 페이지 */}
+          <Route path="/timer" element={<Timer />} /> {/* 타이머 페이지 */}
           <Route path="/login" element={<Login login={login} />} /> {/* 로그인 페이지 */}
           <Route path="/register" element={<Register />} /> {/* 회원가입 페이지 */}
           <Route path="/welcome" element={<Welcome />  } /> {/*회원가입 성공 안내 페이지 */}

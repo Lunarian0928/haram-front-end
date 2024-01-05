@@ -8,7 +8,7 @@ function SideBar() {
             <SideButton 
                 icon= {<IoAlarmOutline size="48" color="white" />} 
                 label="자명종" 
-                link="/alarm"    
+                link="/reminder"    
             />
             <SideButton 
                 icon={<IoIosTimer size="48" color="white" />} 

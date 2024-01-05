@@ -21,12 +21,7 @@ $white-text-color: #fff;
 }
 
 // Text Styles
-h1, h2  {
-  color: $white-text-color;
-  font-family: 'InkLipquid';
-}
-
-p, button, input, label, a {
+h1, h2, h3, p, span, button, input, label, a {
   color: $white-text-color;
 }
 
@@ -34,6 +29,9 @@ a {
   text-decoration: none;
 }
 
+input::placeholder {
+  color: $white-text-color;
+}
 button {
   // Reset default button styles
   appearance: none;

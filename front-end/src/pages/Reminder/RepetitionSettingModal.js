@@ -33,9 +33,6 @@ function RepetitionSettingModal({ modalIsOpen, closeModal, updateRepetition }) {
     }
   }, [directSettingEnabled, customInterval])
 
-  useEffect(() => {
-    console.log(checkedInterval);
-  }, [checkedInterval])
   const countRadios = [3, 5, -1].map((count, index) => {
     return (
       <label key={index} className={checkedCount === count ? 'checked' : ''}>

@@ -50,5 +50,17 @@ div#reminder {
             }
         }
     }
-    
 }
+
+  @keyframes slideOutLeft {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  
+  .reminder-element.removing {
+    animation: slideOutLeft 0.3s linear forwards;
+  }

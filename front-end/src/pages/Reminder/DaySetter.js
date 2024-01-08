@@ -18,7 +18,6 @@ function DaySetter({days, specialDay, selectDay, selectSpecialDay}) {
     ));
     
     const openDaySettingCalendarModal = () => {
-        console.log("버튼 클릭함");
         setDaySettingCalendarModalIsOpen(true);
     };
 
@@ -26,9 +25,6 @@ function DaySetter({days, specialDay, selectDay, selectSpecialDay}) {
         setDaySettingCalendarModalIsOpen(false);
     };
 
-    useEffect(() => {
-        console.log(daySettingCalendarModalIsOpen); 
-    }, [daySettingCalendarModalIsOpen])
     return (
         <div id="day-setter">
             <DaySettingCalendarModal 
@@ -39,7 +35,7 @@ function DaySetter({days, specialDay, selectDay, selectSpecialDay}) {
             <div id="reminder-day">
                 <p id="day-notice">
                     {
-                        (specialDay.year !== 0) ?
+                        (days.length === 0) ?
                             `${specialDay.year}년 ${specialDay.month}월 ${specialDay.date}일 (${specialDay.day})` :
                             (days.length === 7) ?
                                 "매일" :

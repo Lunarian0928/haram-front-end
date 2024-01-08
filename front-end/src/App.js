@@ -9,6 +9,7 @@ import MainHeader from './components/commual/MainHeader/MainHeader'; // 메인 �
 import SideBar from './components/commual/SideBar/SideBar'; // 사이드 바
 import Home from './pages/Home/Home'; // 홈 페이지
 import Reminder from './pages/Reminder/Reminder'; // 알람 페이지
+import ModifyReminder from './pages/Reminder/ModifyReminder'; // 알람 수정 페이지
 import AddReminder from './pages/Reminder/AddReminder'; // 알람 추가 페이지
 import Timer from './pages/Timer/Timer'; // 타이머 페이지
 import Clock from './pages/Clock/Clock'; // 시계 페이지
@@ -74,7 +75,7 @@ function App() {
     dispatch(setIsRunning(storedIsRunning)); // 타이머 시작 여부를 state로 저장하기
     
     const storedDuration = JSON.parse(localStorage.getItem('duration'));
-    if (storedDuration && (storedDuration.hr !== 0 && storedDuration.min !== 0 && storedDuration.sec !== 0)) {
+    if (storedDuration && !(storedDuration.hr === 0 && storedDuration.min === 0 && storedDuration.sec === 0)) {
       dispatch(setDuration(storedDuration)); // 지금 타이머 시간으로 초기화
     } else {
       const storedInitialDuration = JSON.parse(localStorage.getItem('initialDuration'));
@@ -101,6 +102,8 @@ function App() {
         //  타이머 시간을 localStorage에 저장하기
         localStorage.setItem('duration', JSON.stringify(nextDuration));
       }, 1000);
+    } else {
+      localStorage.setItem('isRunning', 'false'); 
     }
     return () => clearInterval(interval);
   }, [dispatch, isRunning, duration]);
@@ -161,7 +164,6 @@ function App() {
       playAlarm();
     }
   }, [dispatch, timerEnded]);
-  
 
   return (
     <div className="App">
@@ -178,6 +180,7 @@ function App() {
           <Route path="/" element={<Home />} /> {/* 홈 페이지 */}
           <Route path="/reminder" element={<Reminder />} /> {/* 알람 페이지 */}
           <Route path="/add_reminder" element={<AddReminder />} /> {/* 알람 추가 페이지 */}
+          <Route path="/modify_reminder" element={<ModifyReminder />} /> {/* 알람 수정 페이지 */}
           <Route path="/clock" element={<Clock /> } /> {/* 시계 페이지 */}
           <Route path="/timer" element={<Timer />} /> {/* 타이머 페이지 */}
           <Route path="/login" element={<Login login={login} />} /> {/* 로그인 페이지 */}

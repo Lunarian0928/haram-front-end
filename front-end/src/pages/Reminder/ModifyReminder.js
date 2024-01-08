@@ -1,9 +1,9 @@
-import './AddReminder.scss';
+import './ModifyReminder.scss';
 import { MdClose } from "react-icons/md";
 import { IoEllipsisVertical } from "react-icons/io5";
 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import ToggleSwitch from './ToggleSwitch';
 import TimeSetter from './TimeSetter';
@@ -11,14 +11,19 @@ import TimeSetter from './TimeSetter';
 import DaySetter from './DaySetter';
 import RepetitionSettingModal from './RepetitionSettingModal';
 
-function AddReminder() {
-    // 알람 시간
-    const [time, setTime] = useState({
-        meridiem: "오전",
-        hour: 6,
-        min: 0,
-    });
 
+function ModifyReminder() {
+    const location = useLocation();
+    const state = location.state;
+
+    console.log(state);
+    
+    const [time, setTime] = useState({
+        meridiem: state.timeMeridiem,
+        hour: state.timeHour,
+        min: state.timeMin,
+    });
+    
     const today = new Date();
     const tomorrowDate = new Date(today);
     tomorrowDate.setDate(today.getDate() + 1);
@@ -32,29 +37,32 @@ function AddReminder() {
     }
     
     // 알람 요일 설정
-    const [days, setDays] = useState([]);
+    const [days, setDays] = useState(state.days);
 
     
     // 알람 특정 날짜 설정
     const [specialDay, setSpecialDay] = useState({
-        year: tomorrow.year,
-        month: tomorrow.month,
-        date: tomorrow.date,
-        day: tomorrow.day
+        year: state.specialDayYear,
+        month: state.specialDayMonth,
+        date: state.specialDayDate,
+        day: state.specialDayDay
     });
 
     // 공휴일 끄기 옵션
-    const [holidayOption, setHolidayOption] = useState(false);
+    const [holidayOption, setHolidayOption] = useState(
+        state.holidayOption
+    );
     // 알람 이름
-    const [label, setLabel] = useState("");
+    const [label, setLabel] = useState(state.label);
+
     // 다시 울림
     const [repetition, setRepetition] = useState({
-        isRepeating: false,
-        repeatInterval: 5,
-        repeatCount: 3,
+        isRepeating: state.isRepeating,
+        repeatInterval: state.repeatInterval,
+        repeatCount: state.repeatCount,
     });
     // 알람 활성/비활성 여부
-    const [isActive, setIsActive] = useState(true);
+    const [isActive, setIsActive] = useState(state.isActive);
 
     const [repetitionSettingModalIsOpen, setRepetitionSettingModalIsOpen] = useState(false);
     
@@ -118,8 +126,9 @@ function AddReminder() {
     }, [days])
 
     const navigate = useNavigate();
-    const add = () => {
-        axios.post("/api/reminder/add", {
+    const modify = () => {
+        axios.post("/api/reminder/update", {
+            id: state.id,
             timeMeridiem: time.meridiem,
             timeHour: time.hour,
             timeMin: time.min,
@@ -144,7 +153,7 @@ function AddReminder() {
     }
 
     return (
-        <div id="add-reminder">
+        <div id="modify-reminder">
             <RepetitionSettingModal 
                 modalIsOpen={repetitionSettingModalIsOpen} 
                 closeModal={closeRepetitionSettingModal} 
@@ -152,7 +161,7 @@ function AddReminder() {
             />
             <div className="glass">
                 <header>
-                    <h2>알람 추가</h2>
+                    <h2>알람 수정</h2>
                     <button onClick={() => navigate("/reminder")}><MdClose size="24" color="white" /></button>
                 </header>
                 <div id="extra-setter" className="glass">
@@ -206,11 +215,11 @@ function AddReminder() {
                 </div>
                 <div className="button-list">
                     <button onClick={() => navigate("/reminder")}>취소</button>
-                    <button onClick={() => add()}>저장</button>
+                    <button onClick={() => modify()}>저장</button>
                 </div>
             </div>
         </div>
     );
 }
 
-export default AddReminder;
+export default ModifyReminder;

@@ -21,8 +21,8 @@ function AddReminder() {
 
     const today = new Date();
     const tomorrowDate = new Date(today);
-    tomorrowDate.setDate(today.getDate() + 1);
-    
+    tomorrowDate.setTime(today.getTime() + 24 * 60 * 60 * 1000); // 24시간 후의 타임스탬프로 설정
+
     // 내일
     const tomorrow = {
         year: tomorrowDate.getFullYear(),
@@ -30,7 +30,7 @@ function AddReminder() {
         date: tomorrowDate.getDate(),
         day: ["일", "월", "화", "수", "목", "금", "토"][tomorrowDate.getDay()]
     }
-    
+        
     // 알람 요일 설정
     const [days, setDays] = useState([]);
 

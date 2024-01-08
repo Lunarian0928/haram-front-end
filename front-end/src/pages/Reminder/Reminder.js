@@ -4,13 +4,17 @@ import { FaPlus } from "react-icons/fa";
 import { MdCreate, MdDelete } from "react-icons/md";
 
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+import { setReminderEls } from '../../redux/actions';
 import ToggleSwitch from './ToggleSwitch';
 
 function Reminder() {
-    const [reminderEls, setReminderEls] = useState([]);
+    const dispatch = useDispatch();
+    const reminderEls = useSelector((state) => state.reminder.reminderEls);
+    
     const [reminderOpacities, setReminderOpacities] = useState([]);
 
     useEffect(() => {
@@ -22,14 +26,12 @@ function Reminder() {
                     delete item.active;
                     delete item.repeating;
                 });
-    
-                setReminderEls(res.data);
-                setReminderOpacities(res.data.map(() => 1));
+                dispatch(setReminderEls(res.data));
             })
             .catch((err) => {
                 console.log(err);
             });
-    }, []);
+    }, [dispatch]); 
 
     const navigate = useNavigate();
     const navigateModifyReminder = (reminderElement) => {
@@ -54,26 +56,26 @@ function Reminder() {
             }    
         })
     }
+
     const deleteReminderEl = (index) => {
         const newOpacities = [...reminderOpacities];
         newOpacities[index] = 'removing';
         setReminderOpacities(newOpacities);
-
+    
         setTimeout(() => {
             axios.post('/api/reminder/delete', {
                 id: reminderEls[index].id,
             })
             .then(() => {
-            setReminderEls(prevReminderEls => 
-                prevReminderEls.filter((_, idx) => idx !== index)
-            );
-            setReminderOpacities(prev => 
-                prev.filter((_, idx) => idx !== index)
-            );
+                const newReminderEls = reminderEls.filter((_, idx) => idx !== index);
+                dispatch(setReminderEls(newReminderEls));
+    
+                const newReminderOpacities = reminderOpacities.filter((_, idx) => idx !== index);
+                setReminderOpacities(newReminderOpacities);
             })
             .catch((err) => {
-            console.log(err);
-            })
+                console.log(err);
+            });
         }, 300);
     };
 
@@ -84,11 +86,10 @@ function Reminder() {
             isActive: newActiveStatus,
         })
         .then(() => {
-            setReminderEls(prevReminderEls => 
-                prevReminderEls.map((reminder, idx) => 
-                    idx === index ? { ...reminder, isActive: newActiveStatus } : reminder
-                )
+            const newReminderEls = reminderEls.map((reminder, idx) => 
+                idx === index ? { ...reminder, isActive: newActiveStatus } : reminder
             );
+            dispatch(setReminderEls(newReminderEls));
         })
         .catch((err) => {
             console.log(err);
@@ -98,46 +99,45 @@ function Reminder() {
     return (
         <div id="reminder">
             <div id="reminder-list">
-                {
-                    reminderEls.map((reminderElement, index) => (
-                        <div 
-                            key={index} 
-                            className={`reminder-element glass ${reminderOpacities[index] === 'removing' ? 'removing' : ''}`} 
-                            style={{ opacity: reminderOpacities[index] === 'removing' ? 0.5 : 1 }}>
-                            <header>
-                                <p>{(reminderElement.label !== "") ?  reminderElement.label : "알람"}</p>
-                                <div className="button-list">
-                                    <button onClick={() => navigateModifyReminder(reminderElement)}><MdCreate size="24" color="white" /></button>
-                                    <button onClick={() => deleteReminderEl(index)}><MdDelete size="24" color="white" /></button>
-                                </div>
-                            </header>
-                            <div className="reminder-content">
-                                <div className="reminder-info">
-                                    <p>{reminderElement.timeHour}:{reminderElement.timeMin}</p>
-                                        {
-                                            reminderElement.days.length === 0 ? 
-                                                <p>
-                                                    {reminderElement.specialDayYear}년 {reminderElement.specialDayMonth}월 {reminderElement.specialDayDate}일 ({reminderElement.specialDayDay})
-                                                </p>
-                                            : (
-                                                ["월", "화", "수", "목", "금", "토", "일"].map((day, index) => (
-                                                    <span
-                                                        key={index}
-                                                        style={{
-                                                            fontWeight: reminderElement.days.includes(day) ? "bold" : "normal",
-                                                            opacity: reminderElement.days.includes(day) ? 1 : 0.5,
-                                                        }}
-                                                    >
-                                                        {day}{' '}
-                                                    </span>
-                                                )))
-                                        }
-                                </div>
-                                <ToggleSwitch checked={reminderElement.isActive} handleToggle={() => toggleReminderEl(index)}/>
-                            </div>
+            {Array.isArray(reminderEls) && reminderEls.map((reminderElement, index) => (
+                <div 
+                    key={index} 
+                    className={`reminder-element glass ${reminderOpacities[index] === 'removing' ? 'removing' : ''}`} 
+                    style={{ opacity: reminderOpacities[index] === 'removing' ? 0.5 : 1 }}>
+                    <header>
+                        <p>{(reminderElement.label !== "") ?  reminderElement.label : "알람"}</p>    
+                        <div className="button-list">
+                            <button onClick={() => navigateModifyReminder(reminderElement)}><MdCreate size="24" color="white" /></button>
+                            <button onClick={() => deleteReminderEl(index)}><MdDelete size="24" color="white" /></button>
                         </div>
-                    ))
-                }
+                    </header>
+                    <div className="reminder-content">
+                        <div className="reminder-info">
+                            <p>{reminderElement.timeHour}:{reminderElement.timeMin}</p>
+                            {
+                                reminderElement.days.length === 0 ? 
+                                <p>
+                                    {reminderElement.specialDayYear}년 {reminderElement.specialDayMonth}월 {reminderElement.specialDayDate}일 ({reminderElement.specialDayDay})
+                                </p>
+                                : (
+                                    ["월", "화", "수", "목", "금", "토", "일"].map((day, index) => (
+                                        <span
+                                            key={index}
+                                            style={{
+                                                fontWeight: reminderElement.days.includes(day) ? "bold" : "normal",
+                                                opacity: reminderElement.days.includes(day) ? 1 : 0.5,
+                                            }}
+                                        >
+                                        {day}{' '}
+                                        </span>
+                                    ))
+                                )
+                            }
+                        </div>
+                        <ToggleSwitch checked={reminderElement.isActive} handleToggle={() => toggleReminderEl(index)}/>
+                    </div>
+                </div>
+            ))}
             </div>
             <button id="add-reminder" className="glass" onClick={() => navigate("/add_reminder")}>
                 <FaPlus size="48" color="white" />

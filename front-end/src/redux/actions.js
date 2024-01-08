@@ -18,3 +18,8 @@ export const setIsRunning = (isRunning) => ({
 export const resetTimer = () => ({
   type: 'RESET_TIMER',
 });
+
+export const setReminderEls = (reminderEls) => ({
+  type: 'SET_REMINDER_ELS',
+  payload: reminderEls,
+});

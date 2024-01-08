@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setInitialDuration, setDuration, setIsRunning } from './redux/actions';
 import ReactAudioPlayer from 'react-audio-player';
 
+import axios from 'axios';
 import MainHeader from './components/commual/MainHeader/MainHeader'; // 메인 헤더
 import SideBar from './components/commual/SideBar/SideBar'; // 사이드 바
 import Home from './pages/Home/Home'; // 홈 페이지
@@ -34,8 +35,9 @@ function App() {
   const audioRef = useRef(null);
   const [timerEnded, setTimerEnded] = useState(false);
   
-  // 자명종 알람 반복 횟수
-  // const [reminderAlarmRepeatCount, setReminderAlarmRepeatCount] = useState(0);
+  const [reminderAlarmDates, setReminderAlarmDates] = useState([]);
+  const [reminderEls, setReminderEls] = useState([]);
+  
   // 타이머 알람 반복 횟수
   const [, setTimerAlarmRepeatCount] = useState(0);
   
@@ -165,6 +167,105 @@ function App() {
     }
   }, [dispatch, timerEnded]);
 
+  useEffect(() => {
+    axios.get("/api/reminder/read")
+    .then((res) => {
+        res.data.forEach(item => {
+            item.isActive = item.active;
+            item.isRepeating = item.repeating;
+            delete item.active;
+            delete item.repeating;
+        });
+        setReminderEls(res.data);
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+  }, []);
+
+  const dayToNumber = {
+    "일": 0,
+    "월": 1,
+    "화": 2,
+    "수": 3,
+    "목": 4,
+    "금": 5,
+    "토": 6,
+  };
+  
+  useEffect(() => {
+    if (reminderEls.length === 0) return;
+    const updatedReminderAlarmDates = [];
+
+    reminderEls.forEach((reminderElement) => {
+      var reminderHour = reminderElement.timeHour;
+      if (reminderElement.timeMeridiem === '오후') reminderHour += 12;
+      var reminderMin = reminderElement.timeMin;
+
+      // case 1: 요일을 선택 안하고 특정 날짜를 선택한 경우
+      if (reminderElement.days.length === 0) {
+        const reminderAlarmDate = new Date();
+        reminderAlarmDate.setFullYear(reminderElement.specialDayYear);
+        reminderAlarmDate.setMonth(reminderElement.specialDayMonth - 1);
+        reminderAlarmDate.setDate(reminderElement.specialDayDate);
+
+        // 알람이 울리는 시간 설정
+        reminderAlarmDate.setHours(reminderHour);
+        reminderAlarmDate.setMinutes(reminderMin);
+        reminderAlarmDate.setSeconds(0);
+
+        updatedReminderAlarmDates.push(reminderAlarmDate);
+      } else {
+        // case 2: 요일을 선택한 경우
+        const selectedDays = reminderElement.days.map((day) => dayToNumber[day]);
+
+        selectedDays.forEach((selectedDay) => {
+          const reminderAlarmDate = new Date();
+
+          // selectedDay에 해당하는 다음 알람 시간 계산
+          let daysToAdd = selectedDay - reminderAlarmDate.getDay();
+          if (daysToAdd < 0) {
+            daysToAdd += 7; // 선택한 요일이 현재 요일보다 이전이거나 같은 경우 다음 주로 이동
+          } else if (daysToAdd === 0 && reminderAlarmDate < new Date()) {
+            daysToAdd += 7; // 선택한 요일이 현재 요일이며, 현재 시간보다 이전인 경우 다음 주로 이동
+          }
+
+          const nextDateTimestamp = reminderAlarmDate.getTime() + daysToAdd * 24 * 60 * 60 * 1000;
+          reminderAlarmDate.setTime(nextDateTimestamp);
+
+          // 알람이 울리는 시간 재설정
+          reminderAlarmDate.setHours(reminderHour);
+          reminderAlarmDate.setMinutes(reminderMin);
+          reminderAlarmDate.setSeconds(0);
+
+          updatedReminderAlarmDates.push(reminderAlarmDate);
+        });
+      }
+    });
+
+    // 정렬 후 state 업데이트
+    updatedReminderAlarmDates.sort((a, b) => a - b);
+    setReminderAlarmDates(updatedReminderAlarmDates);
+  }, [reminderEls]);
+  
+  useEffect(() => {
+    reminderAlarmDates.forEach((reminderAlarmDate, index) => {
+      const now = new Date();
+      console.log("reminderAlarmDate: ", reminderAlarmDate);
+      
+      const timeUntilAlarm = reminderAlarmDate - now;
+      console.log("timeUntilAlarm: ", timeUntilAlarm);
+
+      if (timeUntilAlarm > 0) {
+        const timeoutId = setTimeout(() => {
+          console.log(`Alarm ${index + 1} triggered at ${new Date()}`);
+        }, timeUntilAlarm);
+
+      } 
+    })
+  }, [reminderAlarmDates])
+
+  
   return (
     <div className="App">
       <BrowserRouter>

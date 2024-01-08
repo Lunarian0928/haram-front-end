@@ -9,11 +9,16 @@ import axios from 'axios';
 import MainHeader from './components/commual/MainHeader/MainHeader'; // 메인 헤더
 import SideBar from './components/commual/SideBar/SideBar'; // 사이드 바
 import Home from './pages/Home/Home'; // 홈 페이지
+// 알람
 import Reminder from './pages/Reminder/Reminder'; // 알람 페이지
 import ModifyReminder from './pages/Reminder/ModifyReminder'; // 알람 수정 페이지
 import AddReminder from './pages/Reminder/AddReminder'; // 알람 추가 페이지
+import ReminderAlarmModal from './alarmModals/ReminderAlarmModal';
+// 타이머
 import Timer from './pages/Timer/Timer'; // 타이머 페이지
+// 시계
 import Clock from './pages/Clock/Clock'; // 시계 페이지
+// 회원가입/로그인
 import Login from './pages/Login/Login'; // 로그인 페이지
 import Register from './pages/Register/Register'; // 회원가입 페이지
 import Welcome from './pages/Register/Welcome';
@@ -21,6 +26,7 @@ import FindId from './pages/FindId/FindId'; // 아이디 찾기 페이지
 import FindPw from './pages/FindPw/FindPw';
 import ChangePw from './pages/FindPw/ChangePw'; // 패스워드 초기화 페이지
 import ChangeSuccess from './pages/FindPw/ChangeSuccess'; // 패스워드 초기화 완료 페이지
+// 마이페이지
 import MyPage from './pages/MyPage/MyPage';
 import MyPoint from './pages/MyPage/MyPoint';
 import MyGiftcon from './pages/MyPage/MyGiftcon';
@@ -37,7 +43,9 @@ function App() {
   
   const [reminderAlarmDates, setReminderAlarmDates] = useState([]);
   const [reminderEls, setReminderEls] = useState([]);
-  
+  const [reminderAlarmModalIsOpen, setReminderAlarmModalIsOpen] = useState(false);
+  const [reminderTimeoutIds, setReminderTimeoutIds] = useState([]);
+
   // 타이머 알람 반복 횟수
   const [, setTimerAlarmRepeatCount] = useState(0);
   
@@ -214,7 +222,10 @@ function App() {
         reminderAlarmDate.setMinutes(reminderMin);
         reminderAlarmDate.setSeconds(0);
 
-        updatedReminderAlarmDates.push(reminderAlarmDate);
+        updatedReminderAlarmDates.push({
+          id: reminderElement.id,
+          date: reminderAlarmDate
+        });
       } else {
         // case 2: 요일을 선택한 경우
         const selectedDays = reminderElement.days.map((day) => dayToNumber[day]);
@@ -225,7 +236,7 @@ function App() {
           // selectedDay에 해당하는 다음 알람 시간 계산
           let daysToAdd = selectedDay - reminderAlarmDate.getDay();
           if (daysToAdd < 0) {
-            daysToAdd += 7; // 선택한 요일이 현재 요일보다 이전이거나 같은 경우 다음 주로 이동
+            daysToAdd += 7; // 선택한 요일이 현재 요일보다 이전이면 다음 주로 이동
           } else if (daysToAdd === 0 && reminderAlarmDate < new Date()) {
             daysToAdd += 7; // 선택한 요일이 현재 요일이며, 현재 시간보다 이전인 경우 다음 주로 이동
           }
@@ -238,34 +249,54 @@ function App() {
           reminderAlarmDate.setMinutes(reminderMin);
           reminderAlarmDate.setSeconds(0);
 
-          updatedReminderAlarmDates.push(reminderAlarmDate);
+          updatedReminderAlarmDates.push({
+            id: reminderElement.id,
+            date: reminderAlarmDate
+          });
+          updatedReminderAlarmDates.sort((a, b) => a.date - b.date);
         });
       }
     });
-
-    // 정렬 후 state 업데이트
-    updatedReminderAlarmDates.sort((a, b) => a - b);
     setReminderAlarmDates(updatedReminderAlarmDates);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reminderEls]);
   
   useEffect(() => {
+    console.log(reminderAlarmDates);
+    const timeoutIds = [];
+    
     reminderAlarmDates.forEach((reminderAlarmDate, index) => {
+      console.log("forEach 돌입");
       const now = new Date();
-      console.log("reminderAlarmDate: ", reminderAlarmDate);
-      
-      const timeUntilAlarm = reminderAlarmDate - now;
+      const timeUntilAlarm = reminderAlarmDate.date - now;
       console.log("timeUntilAlarm: ", timeUntilAlarm);
-
       if (timeUntilAlarm > 0) {
-        const timeoutId = setTimeout(() => {
-          console.log(`Alarm ${index + 1} triggered at ${new Date()}`);
+        setTimeout(() => {
+          console.log(`Alarm ${reminderAlarmDate.id} triggered at ${new Date()}`);
+          // ReminderAlarmModal에 reminder의 ID를 전달
+          // setReminderTimeoutIds를 사용하여 reminderTimeoutIds 상태를 업데이트
+          setReminderTimeoutIds((prevTimeoutIds) => [...prevTimeoutIds, reminderAlarmDate.id]);
         }, timeUntilAlarm);
+        timeoutIds.push(reminderAlarmDate.id);
+      }
+    });
+    
+    // 반환된 함수는 언마운트 시에 실행됩니다.
+    return () => {
+      timeoutIds.forEach((timeoutId, index) => {
+        clearTimeout(timeoutId);
+        console.log(`Timer ${index + 1} cleared at ${new Date()}`);
+      });
+    };
+  }, [reminderAlarmDates, reminderEls]);
 
-      } 
-    })
-  }, [reminderAlarmDates])
+  const reminderAlarmModalClose = () => {
+    setReminderAlarmModalIsOpen(false);
+  }
 
-  
+  const reminderAlarmModalOpen = () => {
+    setReminderAlarmModalIsOpen(true);
+  }
   return (
     <div className="App">
       <BrowserRouter>
@@ -277,8 +308,15 @@ function App() {
           autoPlay={false}
           controls={false}
         />
+        <ReminderAlarmModal modalIsOpen={reminderAlarmModalIsOpen} closeModal={reminderAlarmModalClose} reminderTimeoutIds={reminderTimeoutIds} />
+        <button 
+          onClick={() => reminderAlarmModalOpen()}
+          style={{ position: 'absolute', top: '50%', left: '50%'}}
+        >
+          자명종 알람 결과 테스트
+        </button>
         <Routes>
-          <Route path="/" element={<Home />} /> {/* 홈 페이지 */}
+          {/* <Route path="/" element={<Home />} /> */}
           <Route path="/reminder" element={<Reminder />} /> {/* 알람 페이지 */}
           <Route path="/add_reminder" element={<AddReminder />} /> {/* 알람 추가 페이지 */}
           <Route path="/modify_reminder" element={<ModifyReminder />} /> {/* 알람 수정 페이지 */}

@@ -4,7 +4,10 @@ import { IoEllipsisVertical } from "react-icons/io5";
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+
+import { setReminderEls } from '../../redux/actions';
 import ToggleSwitch from './ToggleSwitch';
 import TimeSetter from './TimeSetter';
 
@@ -12,6 +15,9 @@ import DaySetter from './DaySetter';
 import RepetitionSettingModal from './RepetitionSettingModal';
 
 function AddReminder() {
+    const dispatch = useDispatch();
+    const reminderEls = useSelector((state) => state.reminder.reminderEls);
+
     // 알람 시간
     const [time, setTime] = useState({
         meridiem: "오전",
@@ -54,7 +60,7 @@ function AddReminder() {
         repeatCount: 3,
     });
     // 알람 활성/비활성 여부
-    const [isActive, setIsActive] = useState(true);
+    const [isActive, ] = useState(true);
 
     const [repetitionSettingModalIsOpen, setRepetitionSettingModalIsOpen] = useState(false);
     
@@ -115,11 +121,12 @@ function AddReminder() {
                 });
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [days])
 
     const navigate = useNavigate();
     const add = () => {
-        axios.post("/api/reminder/add", {
+        const createReminderObject = () => ({
             timeMeridiem: time.meridiem,
             timeHour: time.hour,
             timeMin: time.min,
@@ -134,13 +141,23 @@ function AddReminder() {
             repeatInterval: repetition.repeatInterval,
             repeatCount: repetition.repeatCount,
             isActive: isActive,
-        })
-        .then((res) => {
-            navigate("/reminder");
-        })
-        .catch((err) => {
-            console.log(err);
-        })
+        });
+        const newReminderEl = createReminderObject();
+    
+        axios.post("/api/reminder/add", createReminderObject())
+            .then((res) => {
+                if (res.data) {
+                    console.log("추가 성공");
+                    dispatch(setReminderEls([...reminderEls, newReminderEl]));
+                } else {
+                    console.log("추가 실패");
+                }
+                
+                navigate("/reminder");
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     return (

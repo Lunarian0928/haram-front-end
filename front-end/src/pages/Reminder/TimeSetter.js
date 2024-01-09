@@ -33,7 +33,6 @@ function TimeSetter({time, setTime}) {
     const handleHour = (hour) => {
         var newHour = hour;
         var newMeridiem = time.meridiem;
-        console.log(newMeridiem);
         if (newHour > 12) {
             newMeridiem = (time.meridiem === '오전') ? '오후' : '오전';
             newHour = 1;

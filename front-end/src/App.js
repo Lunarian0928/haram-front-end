@@ -2,7 +2,7 @@ import './App.scss';
 import { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setInitialDuration, setDuration, setIsRunning } from './redux/actions';
+import { setInitialDuration, setDuration, setIsRunning, setReminderEls } from './redux/actions';
 import ReactAudioPlayer from 'react-audio-player';
 
 import axios from 'axios';
@@ -42,10 +42,9 @@ function App() {
   const [timerEnded, setTimerEnded] = useState(false);
   
   const [reminderAlarmDates, setReminderAlarmDates] = useState([]);
-  const [reminderEls, setReminderEls] = useState([]);
+  const reminderEls = useSelector((state) => state.reminder.reminderEls);
   const [reminderAlarmModalIsOpen, setReminderAlarmModalIsOpen] = useState(false);
-  const [reminderTimeoutIds, setReminderTimeoutIds] = useState([]);
-
+  const [endedReminderId, setEndedReminderId] = useState(0);
   // 타이머 알람 반복 횟수
   const [, setTimerAlarmRepeatCount] = useState(0);
   
@@ -184,13 +183,16 @@ function App() {
             delete item.active;
             delete item.repeating;
         });
-        setReminderEls(res.data);
+        dispatch(setReminderEls(res.data));
     })
     .catch((err) => {
         console.log(err);
     });
   }, []);
 
+  useEffect(() => {
+    console.log(reminderEls);
+  }, [reminderEls])
   const dayToNumber = {
     "일": 0,
     "월": 1,
@@ -202,7 +204,7 @@ function App() {
   };
   
   useEffect(() => {
-    if (reminderEls.length === 0) return;
+    if (!Array.isArray(reminderEls)) return;
     const updatedReminderAlarmDates = [];
 
     reminderEls.forEach((reminderElement) => {
@@ -262,33 +264,32 @@ function App() {
   }, [reminderEls]);
   
   useEffect(() => {
-    console.log(reminderAlarmDates);
     const timeoutIds = [];
-    
-    reminderAlarmDates.forEach((reminderAlarmDate, index) => {
-      console.log("forEach 돌입");
+  
+    reminderAlarmDates.forEach(reminderAlarmDate => {
       const now = new Date();
       const timeUntilAlarm = reminderAlarmDate.date - now;
-      console.log("timeUntilAlarm: ", timeUntilAlarm);
+  
       if (timeUntilAlarm > 0) {
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
           console.log(`Alarm ${reminderAlarmDate.id} triggered at ${new Date()}`);
-          // ReminderAlarmModal에 reminder의 ID를 전달
-          // setReminderTimeoutIds를 사용하여 reminderTimeoutIds 상태를 업데이트
-          setReminderTimeoutIds((prevTimeoutIds) => [...prevTimeoutIds, reminderAlarmDate.id]);
+          setEndedReminderId(reminderAlarmDate.id);
+          console.log("Adding timeoutId:", timeoutId);
         }, timeUntilAlarm);
-        timeoutIds.push(reminderAlarmDate.id);
+  
+        timeoutIds.push(timeoutId);
       }
     });
-    
-    // 반환된 함수는 언마운트 시에 실행됩니다.
+  
+    // Cleanup function
     return () => {
-      timeoutIds.forEach((timeoutId, index) => {
-        clearTimeout(timeoutId);
-        console.log(`Timer ${index + 1} cleared at ${new Date()}`);
-      });
+      timeoutIds.forEach(timeoutId => clearTimeout(timeoutId));
     };
   }, [reminderAlarmDates, reminderEls]);
+
+  useEffect(() => {
+    if (endedReminderId !== 0) reminderAlarmModalOpen();
+  }, [endedReminderId])
 
   const reminderAlarmModalClose = () => {
     setReminderAlarmModalIsOpen(false);
@@ -297,8 +298,15 @@ function App() {
   const reminderAlarmModalOpen = () => {
     setReminderAlarmModalIsOpen(true);
   }
+
+  const handleKeyDown = (event) => {
+    // Tab 키 코드: 9
+    if (event.keyCode === 9) {
+      reminderAlarmModalOpen();
+    }
+  };
   return (
-    <div className="App">
+    <div className="App" onKeyDown={handleKeyDown} tabIndex="0">
       <BrowserRouter>
         <MainHeader isLoggedIn={isLoggedIn} loggedInId={loggedInId} logout={logout} />
         <SideBar />
@@ -308,15 +316,9 @@ function App() {
           autoPlay={false}
           controls={false}
         />
-        <ReminderAlarmModal modalIsOpen={reminderAlarmModalIsOpen} closeModal={reminderAlarmModalClose} reminderTimeoutIds={reminderTimeoutIds} />
-        <button 
-          onClick={() => reminderAlarmModalOpen()}
-          style={{ position: 'absolute', top: '50%', left: '50%'}}
-        >
-          자명종 알람 결과 테스트
-        </button>
+        <ReminderAlarmModal modalIsOpen={reminderAlarmModalIsOpen} closeModal={reminderAlarmModalClose} endedReminderId={endedReminderId} />
         <Routes>
-          {/* <Route path="/" element={<Home />} /> */}
+          <Route path="/" element={<Home />} />
           <Route path="/reminder" element={<Reminder />} /> {/* 알람 페이지 */}
           <Route path="/add_reminder" element={<AddReminder />} /> {/* 알람 추가 페이지 */}
           <Route path="/modify_reminder" element={<ModifyReminder />} /> {/* 알람 수정 페이지 */}

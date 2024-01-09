@@ -4,7 +4,11 @@ import { IoEllipsisVertical } from "react-icons/io5";
 
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import { setReminderEls } from '../../redux/actions';
+
 import ToggleSwitch from './ToggleSwitch';
 import TimeSetter from './TimeSetter';
 
@@ -15,8 +19,9 @@ import RepetitionSettingModal from './RepetitionSettingModal';
 function ModifyReminder() {
     const location = useLocation();
     const state = location.state;
-
-    console.log(state);
+    
+    const dispatch = useDispatch();
+    const reminderEls = useSelector((state) => state.reminder.reminderEls);
     
     const [time, setTime] = useState({
         meridiem: state.timeMeridiem,
@@ -62,7 +67,7 @@ function ModifyReminder() {
         repeatCount: state.repeatCount,
     });
     // 알람 활성/비활성 여부
-    const [isActive, setIsActive] = useState(state.isActive);
+    const [isActive, ] = useState(state.isActive);
 
     const [repetitionSettingModalIsOpen, setRepetitionSettingModalIsOpen] = useState(false);
     
@@ -123,11 +128,12 @@ function ModifyReminder() {
                 });
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [days])
 
     const navigate = useNavigate();
     const modify = () => {
-        axios.post("/api/reminder/update", {
+        const createReminderObject = () => ({
             id: state.id,
             timeMeridiem: time.meridiem,
             timeHour: time.hour,
@@ -143,8 +149,18 @@ function ModifyReminder() {
             repeatInterval: repetition.repeatInterval,
             repeatCount: repetition.repeatCount,
             isActive: isActive,
-        })
+        });
+        const newReminderEl = createReminderObject();
+
+        axios.post("/api/reminder/update", createReminderObject())
         .then((res) => {
+            if (res.data) {
+                console.log("업데이트 성공");
+                dispatch(setReminderEls(...reminderEls, newReminderEl));
+            } else {
+                console.log("업데이트 실패");
+            }
+            
             navigate("/reminder");
         })
         .catch((err) => {

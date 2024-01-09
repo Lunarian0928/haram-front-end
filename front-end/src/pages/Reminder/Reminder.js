@@ -113,7 +113,13 @@ function Reminder() {
                     </header>
                     <div className="reminder-content">
                         <div className="reminder-info">
-                            <p>{reminderElement.timeHour}:{reminderElement.timeMin}</p>
+                            <p>
+                                {(
+                                    reminderElement.timeMeridiem === "오전"
+                                    ? reminderElement.timeHour
+                                    : reminderElement.timeHour + 12
+                                ).toString().padStart(2, '0')}:{reminderElement.timeMin.toString().padStart(2, '0')}
+                            </p>
                             {
                                 reminderElement.days.length === 0 ? 
                                 <p>

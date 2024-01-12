@@ -2,16 +2,16 @@ import { useState } from 'react';
 import './TimePicker.scss';
 import TimeSelector from './TimeSelector.js';
 
-import { useDispatch } from 'react-redux';
-import { setInitialDuration, setDuration } from '../../redux/actions';
+import { useSelector, useDispatch } from 'react-redux';
+import { setInitialDuration, setDuration, setLabel } from '../../redux/actions';
 
-const TimePicker = ({ updateTitle, closeModal }) => {
+const TimePicker = ({ closeModal }) => {
     const dispatch = useDispatch();
 
     const [hr, setHr] = useState(0);
     const [min, setMin] = useState(0);
     const [sec, setSec] = useState(0);
-    const [title, setTitle] = useState("타이머");
+    const { label } = useSelector((state) => state.timer);
 
     const handleIncrement = (value, max, onChange) => {
         if (value < max) {
@@ -27,14 +27,14 @@ const TimePicker = ({ updateTitle, closeModal }) => {
 
     return (
         <div id="time-picker">
-            <div id="title-input">
+            <div id="label-input">
                 <label>제목</label>
                 <input
                     className="glass" 
-                    value={title} 
+                    value={label} 
                     type="text" 
                     placeholder="타이머 제목" 
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => setLabel(e.target.value)}
                 />
             </div>
             <div id="time-pick">
@@ -43,14 +43,12 @@ const TimePicker = ({ updateTitle, closeModal }) => {
                 <TimeSelector label="초" value={sec} onChange={setSec} onIncrement={handleIncrement} onDecrement={handleDecrement} max={60} />
             </div>
             <button onClick={() => {
-                // 현재 initialDuration을 localStorage에 저장
-                localStorage.setItem('initialDuration', JSON.stringify({ hr, min, sec }));
-
-                // 현재 initialDuration을 Redux 상태로 디스패치
                 dispatch(setInitialDuration({ hr, min, sec }));
                 dispatch(setDuration({ hr, min, sec }));
-                // 나머지 로직 실행
-                updateTitle(title);
+                localStorage.setItem('initialDuration', JSON.stringify({ hr, min, sec }));
+
+                dispatch(setLabel(label));
+                localStorage.setItem('label', label);
                 closeModal();
             }}>
                 선택

@@ -15,10 +15,9 @@ div#add-reminder {
         > div#extra-setter {
             margin-top: 40px;
             padding: 0 40px;
-
+            
             > div {
                 border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-
                 &#holiday-setter, &#repeat-interval-setter {
                     padding: 12px 0;
                     display: flex;
@@ -33,6 +32,7 @@ div#add-reminder {
                         }
                         > p:last-child {
                             font-size: 12px;
+                            color: $white-text-color;
                         }
                     }
                 }

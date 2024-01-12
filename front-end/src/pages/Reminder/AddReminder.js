@@ -167,7 +167,7 @@ function AddReminder() {
                 closeModal={closeRepetitionSettingModal} 
                 updateRepetition={updateRepetition}
             />
-            <div className="glass">
+            <div className="dark-glass">
                 <header>
                     <h2>알람 추가</h2>
                     <button onClick={() => navigate("/reminder")}><MdClose size="24" color="white" /></button>

@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
-import { setInitialDuration, setDuration } from '../../redux/actions';
+import { setInitialDuration, setDuration, setLabel } from '../../redux/actions';
 import './SpecialTimePicker.scss';
-function SpecialTimePicker({ updateTitle, closeModal }) {
+function SpecialTimePicker({ closeModal }) {
     const dispatch = useDispatch();
     class Time {
         constructor(hr = 0, min = 0, sec = 0) {
@@ -36,17 +36,16 @@ function SpecialTimePicker({ updateTitle, closeModal }) {
                         <button
                             key={index}
                             onClick={() => {
-                                const formattedTitle = `${time.hr > 0 ? `${time.hr}시간` : ''} ${
+                                const formattedLabel = `${time.hr > 0 ? `${time.hr}시간` : ''} ${
                                     time.min > 0 ? `${time.min}분` : time.sec > 0 ? '1분' : ''
                                 } ${time.sec > 0 ? `${time.sec}초` : ''} 타이머`;
 
                                 localStorage.setItem('initialDuration', JSON.stringify({ hr: time.hr, min: time.min, sec: time.sec }));
-
-                                // 현재 initialDuration을 Redux 상태로 디스패치
                                 dispatch(setInitialDuration({ hr: time.hr, min: time.min, sec: time.sec }));
                                 dispatch(setDuration({ hr: time.hr, min: time.min, sec: time.sec }));
 
-                                updateTitle(formattedTitle);
+                                dispatch(setLabel(formattedLabel));
+                                localStorage.setItem('label', formattedLabel);
                                 closeModal();
                             }}
                         >

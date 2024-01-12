@@ -2,8 +2,7 @@ import './App.scss';
 import { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setInitialDuration, setDuration, setIsRunning, setReminderEls } from './redux/actions';
-import ReactAudioPlayer from 'react-audio-player';
+import { setReminderEls } from './redux/actions';
 
 import axios from 'axios';
 import MainHeader from './components/commual/MainHeader/MainHeader'; // 메인 헤더
@@ -13,9 +12,12 @@ import Home from './pages/Home/Home'; // 홈 페이지
 import Reminder from './pages/Reminder/Reminder'; // 알람 페이지
 import ModifyReminder from './pages/Reminder/ModifyReminder'; // 알람 수정 페이지
 import AddReminder from './pages/Reminder/AddReminder'; // 알람 추가 페이지
-import ReminderAlarmModal from './alarmModals/ReminderAlarmModal';
+import ReminderAlarmModal from './alarmModals/ReminderAlarmModal'; // 자명종 알람 모달
 // 타이머
 import Timer from './pages/Timer/Timer'; // 타이머 페이지
+import TimerAlarmModal from './alarmModals/TimerAlarmModal'; // 타이머 알람 모달
+// 스톱워치
+import Stopwatch from './pages/Stopwatch/Stopwatch'; // 스톱워치 페이지
 // 시계
 import Clock from './pages/Clock/Clock'; // 시계 페이지
 // 회원가입/로그인
@@ -33,18 +35,16 @@ import MyGiftcon from './pages/MyPage/MyGiftcon';
 
 function App() {
   const dispatch = useDispatch();
-  const { initialDuration, duration, isRunning } = useSelector((state) => state.timer);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loggedInId, setLoggedInId] = useState("");
 
-  const audioRef = useRef(null);
-  const [timerEnded, setTimerEnded] = useState(false);
+  const [reminderAlarmModalIsOpen, setReminderAlarmModalIsOpen] = useState(false);
   
   const [reminderAlarmDates, setReminderAlarmDates] = useState([]);
   const reminderEls = useSelector((state) => state.reminder.reminderEls);
-  const [reminderAlarmModalIsOpen, setReminderAlarmModalIsOpen] = useState(false);
   const [endedReminderId, setEndedReminderId] = useState(0);
+
   // 타이머 알람 반복 횟수
   const [, setTimerAlarmRepeatCount] = useState(0);
   
@@ -76,103 +76,6 @@ function App() {
       setIsLoggedIn(true);
     }
   }, []); // 빈 배열을 전달하여 컴포넌트가 처음 마운트될 때만 실행되도록 함
-
-
-  useEffect(() => {
-    // 타이머 시작 여부를 localStorage로 불러오기
-    const storedIsRunning = localStorage.getItem('isRunning') === 'true'; 
-    dispatch(setIsRunning(storedIsRunning)); // 타이머 시작 여부를 state로 저장하기
-    
-    const storedDuration = JSON.parse(localStorage.getItem('duration'));
-    if (storedDuration && !(storedDuration.hr === 0 && storedDuration.min === 0 && storedDuration.sec === 0)) {
-      dispatch(setDuration(storedDuration)); // 지금 타이머 시간으로 초기화
-    } else {
-      const storedInitialDuration = JSON.parse(localStorage.getItem('initialDuration'));
-      if (storedInitialDuration) {
-        dispatch(setInitialDuration(storedInitialDuration));
-        dispatch(setDuration(storedInitialDuration));
-      }
-      else {
-        dispatch(setDuration(initialDuration));
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
-  
-  // 타이머 재생
-  useEffect(() => { 
-    let interval;
-    if (isRunning) {
-      //  타이머 시작 여부를 localStorage에 저장하기
-      localStorage.setItem('isRunning', 'true'); 
-      interval = setInterval(() => {
-        const nextDuration = calculateNextDuration(duration);
-        dispatch(setDuration(nextDuration));
-        //  타이머 시간을 localStorage에 저장하기
-        localStorage.setItem('duration', JSON.stringify(nextDuration));
-      }, 1000);
-    } else {
-      localStorage.setItem('isRunning', 'false'); 
-    }
-    return () => clearInterval(interval);
-  }, [dispatch, isRunning, duration]);
-  
-  const calculateNextDuration = (prevDuration) => {
-    if (prevDuration.hr === 0 && prevDuration.min === 0 && prevDuration.sec === 0) {
-      setTimerEnded(true);
-      return prevDuration;
-    }
-    if (prevDuration.sec === 0) {
-      if (prevDuration.min === 0) {
-        return {
-          hr: prevDuration.hr - 1,
-          min: 59,
-          sec: 59,
-        };
-      }
-      return {
-        hr: prevDuration.hr,
-        min: prevDuration.min - 1,
-        sec: 59,
-      };
-    }
-    return {
-      hr: prevDuration.hr,
-      min: prevDuration.min,
-      sec: prevDuration.sec - 1,
-    };
-  };
-
-  useEffect(() => {
-    const playAlarm = () => {
-      const audioElement = audioRef.current.audioEl.current;
-      const handleAudioEnd = () => {
-        audioElement.removeEventListener('ended', handleAudioEnd);
-  
-        setTimerAlarmRepeatCount((prevCnt) => {
-          if (prevCnt < 2) {
-            audioElement.currentTime = 0;
-            audioElement.play();
-            audioElement.addEventListener('ended', handleAudioEnd);
-          } else {
-            setTimerEnded(false);
-          }
-          return prevCnt + 1;
-        });
-      };
-  
-      audioElement.addEventListener('ended', handleAudioEnd);
-      audioElement.play();
-    };
-  
-    if (timerEnded) {
-      dispatch(setIsRunning(false));
-      localStorage.setItem('isRunning', 'false');
-  
-      setTimerAlarmRepeatCount(0);
-      playAlarm();
-    }
-  }, [dispatch, timerEnded]);
 
   useEffect(() => {
     axios.get("/api/reminder/read")
@@ -336,12 +239,7 @@ function App() {
       <BrowserRouter>
         <MainHeader isLoggedIn={isLoggedIn} loggedInId={loggedInId} logout={logout} />
         <SideBar />
-        <ReactAudioPlayer
-          ref={audioRef}
-          src={`${process.env.PUBLIC_URL}/audio/scene_change5.mp3`}
-          autoPlay={false}
-          controls={false}
-        />
+        <TimerAlarmModal/>
         <ReminderAlarmModal modalIsOpen={reminderAlarmModalIsOpen} closeModal={reminderAlarmModalClose} endedReminderId={endedReminderId} />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -350,6 +248,7 @@ function App() {
           <Route path="/modify_reminder" element={<ModifyReminder />} /> {/* 알람 수정 페이지 */}
           <Route path="/clock" element={<Clock /> } /> {/* 시계 페이지 */}
           <Route path="/timer" element={<Timer />} /> {/* 타이머 페이지 */}
+          <Route path="/stopwatch" element={<Stopwatch />} />
           <Route path="/login" element={<Login login={login} />} /> {/* 로그인 페이지 */}
           <Route path="/register" element={<Register />} /> {/* 회원가입 페이지 */}
           <Route path="/welcome" element={<Welcome />  } /> {/*회원가입 성공 안내 페이지 */}

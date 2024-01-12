@@ -87,13 +87,6 @@ function ReminderAlarmModal({modalIsOpen, closeModal, endedReminderId}) {
         }
         setAlarmCount(0);
     };
-    const stopAlarm = () => {
-        if (audioRef !== null && audioRef.current !== null) {
-            const audioElement = audioRef.current.audioEl.current;
-            audioElement.pause();
-            audioElement.currentTime = 0;
-        }
-    }
 
     useEffect(() => {
         playAlarm();

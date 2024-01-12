@@ -1,4 +1,5 @@
 const initialState = {
+  label: "유일한 진정한 행복은 목적을 위해 몰입하는 데서 온다",
   initialDuration: {
     hr: 0,
     min: 1,
@@ -38,7 +39,11 @@ const timerReducer = (state = initialState, action) => {
         duration: { ...state.initialDuration }, 
         isRunning: false
       };
-
+    case 'SET_LABEL':
+      return {
+        ...state,
+        label: action.payload,
+      }
     default:
       return state;
   }

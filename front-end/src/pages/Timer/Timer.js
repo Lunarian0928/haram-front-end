@@ -1,13 +1,23 @@
 // Timer.js
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setLabel } from '../../redux/actions';
 import BasicTimer from './BasicTimer';
 import TimerSettingModal from './TimerSettingModal';
 
 import './Timer.scss';
 
 function Timer() {
-  const [title, setTitle] = useState('<span>"</span>성공은 우연이 아니다. 노력, 인내, 배움, 공부, 희생, <br/> 그리고 무엇보다 자신이 하고 있는 일에 대한 사랑, 하는 법을 배우는 것이다.<span>"</span>');
+  const dispatch = useDispatch();
   const [timerSettingModalIsOpen, setTimerSettingModalIsOpen] = useState(false);
+  const { label } = useSelector((state) => state.timer);
+
+  useEffect(() => {
+    const storedLabel = localStorage.getItem('label');
+    if (storedLabel) {
+      dispatch(setLabel(storedLabel)); 
+    } 
+  }, [dispatch])
 
   const openTimerSettingModal = () => {
     setTimerSettingModalIsOpen(true);
@@ -15,10 +25,6 @@ function Timer() {
 
   const closeTimerSettingModal = () => {
     setTimerSettingModalIsOpen(false);
-  };
-
-  const updateTitle = (newTitle) => {
-    setTitle(newTitle);
   };
 
   return (
@@ -29,10 +35,9 @@ function Timer() {
       <TimerSettingModal
         modalIsOpen={timerSettingModalIsOpen}
         closeModal={closeTimerSettingModal}
-        updateTitle={updateTitle}
       />
-      <div id="timer-title">
-        <h1 dangerouslySetInnerHTML={{ __html: title }} />
+      <div id="timer-label">
+        <h2>{label}</h2>
       </div>
     </div>
   );

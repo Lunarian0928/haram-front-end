@@ -4,7 +4,7 @@ import TimePicker from './TimePicker';
 import SpecialTimePicker from "./SpecialTimePicker";
 import './TimerSettingModal.scss';
 
-function TimerSettingModal({modalIsOpen, closeModal, updateTitle}) {
+function TimerSettingModal({modalIsOpen, closeModal, updateLabel}) {
   return (
     <div id="timer-setting-modal">
       <Modal
@@ -19,8 +19,8 @@ function TimerSettingModal({modalIsOpen, closeModal, updateTitle}) {
           <h2>타이머 세팅</h2>
           <button onClick={closeModal}><MdClose size={24}/></button>
         </header>
-        <TimePicker updateTitle={updateTitle} closeModal={closeModal} />
-        <SpecialTimePicker updateTitle={updateTitle} closeModal={closeModal} />
+        <TimePicker closeModal={closeModal} />
+        <SpecialTimePicker closeModal={closeModal} />
       </Modal>
     </div>
   );

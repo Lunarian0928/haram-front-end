@@ -5,7 +5,7 @@ function MainHeader({isLoggedIn, loggedInId, logout}) {
     const navigate = useNavigate();
     return (
         <header id="main-header">  
-            <h1>하람</h1>
+            <h1>Haram</h1>
             <nav>
                 <Link to="/">홈</Link>
                 <Link to="/timer">타이머</Link>

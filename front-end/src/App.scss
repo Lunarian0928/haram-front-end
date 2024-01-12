@@ -1,37 +1,87 @@
 @import '../node_modules/normalize.css/normalize.css';
-
-// Color.scss
-$white-text-color: #fff;
-
 // App.scss
 @import "./Color.scss";
 
 @font-face {
-  font-family: 'InkLipquid';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/InkLipquid.woff') format('woff');
-  font-weight: normal;
+  font-family: "Noto Sans KR";
   font-style: normal;
+  font-weight: 100;
+  src: url("./font/NotoSansKR-Thin.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 200;
+  src: url("./font/NotoSansKR-ExtraLight.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 300;
+  src: url("./font/NotoSansKR-Light.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./font/NotoSansKR-Regular.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 500;
+  src: url("./font/NotoSansKR-Medium.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 600;
+  src: url("./font/NotoSansKR-Medium.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 700;
+  src: url("./font/NotoSansKR-Bold.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 800;
+  src: url("./font/NotoSansKR-ExtraBold.ttf") format("ttf");
+}
+
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 900;
+  src: url("./font/NotoSansKR-Black.ttf") format("ttf");
 }
 
 .App {
-  background-image: url('./background/night_sky_with_stars.jpeg');
+  background-image: url('./background/back_to_school2.jpeg');
   background-size: cover;
   text-align: center;
   height: 100vh;
 }
 
 // Text Styles
-h1, h2, h3, p, span, button, input, label, a {
+h1, h2, h3, p, span, button, input, input::placeholder, label, a, th, td {
   color: $white-text-color;
+  font-family: "Noto Sans KR";
 }
 
 a {
   text-decoration: none;
 }
 
-input::placeholder {
-  color: $white-text-color;
-}
 button {
   // Reset default button styles
   appearance: none;

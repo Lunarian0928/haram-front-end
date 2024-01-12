@@ -3,7 +3,7 @@ import { setIsRunning, resetTimer } from '../../redux/actions';
 import './BasicTimer.scss';
 function BasicTimer({openTimerSettingModal}) {
   const dispatch = useDispatch();
-  const {duration, isRunning } = useSelector((state) => state.timer);
+  const { duration, isRunning } = useSelector((state) => state.timer);
 
   const toggleTimer = () => {
     dispatch(setIsRunning(!isRunning));

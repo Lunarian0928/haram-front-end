@@ -19,6 +19,11 @@ export const resetTimer = () => ({
   type: 'RESET_TIMER',
 });
 
+export const setLabel = (label) => ({
+  type: 'SET_LABEL',
+  payload: label,
+})
+
 export const setReminderEls = (reminderEls) => ({
   type: 'SET_REMINDER_ELS',
   payload: reminderEls,

@@ -190,9 +190,6 @@ function App() {
     });
   }, []);
 
-  useEffect(() => {
-    console.log(reminderEls);
-  }, [reminderEls])
   const dayToNumber = {
     "일": 0,
     "월": 1,
@@ -204,10 +201,11 @@ function App() {
   };
   
   useEffect(() => {
-    if (!Array.isArray(reminderEls)) return;
+    if (!Array.isArray(reminderEls)) return; // reminderEls를 아직 읽어오지 않은 경우
     const updatedReminderAlarmDates = [];
 
     reminderEls.forEach((reminderElement) => {
+      if (!reminderElement.isActive) return; // 알람을 꺼놓은 경우
       var reminderHour = reminderElement.timeHour;
       if (reminderElement.timeMeridiem === '오후') reminderHour += 12;
       var reminderMin = reminderElement.timeMin;
@@ -218,6 +216,14 @@ function App() {
         reminderAlarmDate.setFullYear(reminderElement.specialDayYear);
         reminderAlarmDate.setMonth(reminderElement.specialDayMonth - 1);
         reminderAlarmDate.setDate(reminderElement.specialDayDate);
+
+        // 공휴일에는 끄는 옵션을 설정하였다면
+        // 날짜 계산 후 공휴일 여부 판정
+        if (reminderElement.holidayOption && checkHoliday(
+          reminderAlarmDate.getFullYear(),
+          reminderAlarmDate.getMonth(),
+          reminderAlarmDate.getDate()
+        )) return;
 
         // 알람이 울리는 시간 설정
         reminderAlarmDate.setHours(reminderHour);
@@ -246,6 +252,14 @@ function App() {
           const nextDateTimestamp = reminderAlarmDate.getTime() + daysToAdd * 24 * 60 * 60 * 1000;
           reminderAlarmDate.setTime(nextDateTimestamp);
 
+          // 공휴일에는 끄는 옵션을 설정하였다면
+          // 날짜 계산 후 공휴일 여부 판정
+          if (reminderElement.holidayOption && checkHoliday(
+            reminderAlarmDate.getFullYear(),
+            reminderAlarmDate.getMonth(),
+            reminderAlarmDate.getDate()
+          )) return;
+
           // 알람이 울리는 시간 재설정
           reminderAlarmDate.setHours(reminderHour);
           reminderAlarmDate.setMinutes(reminderMin);
@@ -253,7 +267,7 @@ function App() {
 
           updatedReminderAlarmDates.push({
             id: reminderElement.id,
-            date: reminderAlarmDate
+            date: reminderAlarmDate,
           });
           updatedReminderAlarmDates.sort((a, b) => a.date - b.date);
         });
@@ -269,7 +283,7 @@ function App() {
     reminderAlarmDates.forEach(reminderAlarmDate => {
       const now = new Date();
       const timeUntilAlarm = reminderAlarmDate.date - now;
-  
+      
       if (timeUntilAlarm > 0) {
         const timeoutId = setTimeout(() => {
           console.log(`Alarm ${reminderAlarmDate.id} triggered at ${new Date()}`);
@@ -287,9 +301,21 @@ function App() {
     };
   }, [reminderAlarmDates, reminderEls]);
 
+  const checkHoliday = (year, month, date) => {
+    console.log(`/api/check_holiday?year=${year}&month=${month}&date=${date}`);
+    return axios.get(`/api/check_holiday?year=${year}&month=${month}&date=${date}`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    })
+  }
+  // 알람 끄기 모달창을 여는 함수
   useEffect(() => {
     if (endedReminderId !== 0) reminderAlarmModalOpen();
-  }, [endedReminderId])
+  }, [endedReminderId]) 
 
   const reminderAlarmModalClose = () => {
     setReminderAlarmModalIsOpen(false);

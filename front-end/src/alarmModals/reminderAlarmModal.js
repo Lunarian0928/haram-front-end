@@ -61,7 +61,6 @@ function ReminderAlarmModal({modalIsOpen, closeModal, endedReminderId}) {
     }, [reminderId]);
     
     const playAlarm = () => {
-        console.log(repetition.isRepeating);
         if (audioRef !== null && audioRef.current !== null) {
             const audioElement = audioRef.current.audioEl.current;
 
@@ -100,15 +99,6 @@ function ReminderAlarmModal({modalIsOpen, closeModal, endedReminderId}) {
         playAlarm();
     }, [repetition]);
 
-    useEffect(() => {
-        console.log(alarmCount);
-    }, [alarmCount])
-
-    const turnOffAlarm = () => {
-        stopAlarm();
-        closeModal();
-    }
-    
     return (
         <div id="reminder-alarm-mdoal">
             <Modal

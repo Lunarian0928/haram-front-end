@@ -1,0 +1,32 @@
+@import '../../Color.scss';
+div.record {
+    padding: 24px;
+    h3 {
+        color: $text-color;
+        text-align: left;
+    }
+    > header > div.button-list { 
+        button.delete-button {
+            padding: 12px;
+        }
+    }
+
+    > div.button-list {
+        display: flex;
+        gap: 24px;
+        button {
+            padding: 12px;
+        }
+    }
+}
+button.export-csv-button {
+    padding: 12px;
+
+    display: flex;
+    justify-content: center;
+
+    color: $text-color;
+    > svg {
+        margin-right: 12px;
+    }
+}

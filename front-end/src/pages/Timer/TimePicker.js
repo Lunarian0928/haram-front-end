@@ -11,6 +11,7 @@ const TimePicker = ({ closeModal }) => {
     const [hr, setHr] = useState(0);
     const [min, setMin] = useState(0);
     const [sec, setSec] = useState(0);
+    const [inputLabel, setInputLabel] = useState("");
     const { label } = useSelector((state) => state.timer);
 
     const handleIncrement = (value, max, onChange) => {
@@ -31,10 +32,10 @@ const TimePicker = ({ closeModal }) => {
                 <label>제목</label>
                 <input
                     className="glass" 
-                    value={label} 
+                    value={inputLabel} 
                     type="text" 
                     placeholder="타이머 제목" 
-                    onChange={(e) => setLabel(e.target.value)}
+                    onChange={(e) => setInputLabel(e.currentTarget.value)}
                 />
             </div>
             <div id="time-pick">
@@ -47,7 +48,7 @@ const TimePicker = ({ closeModal }) => {
                 dispatch(setDuration({ hr, min, sec }));
                 localStorage.setItem('initialDuration', JSON.stringify({ hr, min, sec }));
 
-                dispatch(setLabel(label));
+                dispatch(setLabel(inputLabel));
                 localStorage.setItem('label', label);
                 closeModal();
             }}>

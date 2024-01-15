@@ -1,13 +1,14 @@
 @import '../../Color.scss';
 
 div#stopwatch {
-    width: calc(100vw - 151px);
+    width: calc(100vw - 150px - 2px);
     height: calc(100vh - 59.65px);
 
     position: absolute;
     left: 0px;
     bottom: 0px;
-    div#basic-stopwatch {
+    > div#basic-stopwatch {
+        padding: 40px 0px;
         span {
             margin: 0 12px;
             font-size: 120px;
@@ -15,38 +16,99 @@ div#stopwatch {
             color: white;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         }
-    }
-
-    > table#laps {
-        width: calc(100vw - 151px);
-        height: calc(100vh - 59.65px - 156.4px - 80px);
-        padding: 0 calc((100vw - 151px - 376px) / 2);
-        position: absolute;
-        bottom: 0px;
-
-        display: block;
-        overflow-y: hidden;
-
-        > thead {
-            background-color: #f2f2f2; /* 헤더 배경색 지정 */
-            position: sticky;
-            top: 0;
-            z-index: 1;
+        button {
+            padding: 24px;
+            font-size: 24px;
+            font-weight: 700;
         }
-        > tbody {
-            display: block;
-            overflow-y: scroll;
-            width: 100%;
-            height: calc(100% - 48px);  
-        }
-        th, td {
-            width: 120px;
-            height: 48px;
-            text-align: center; /* 수평 가운데 정렬 */
-            vertical-align: middle; /* 수직 가운데 정렬 */
-        }        
     }
-
+    div#laps {
+        width: calc(100% - 2px);
+        height: calc(100vh - 59.75px - 213.58px - 80px - 2px);
+        overflow: hidden;
+        display: flex;
+        
+        > div#current-laps {
+            width: 600px;
+            overflow: hidden;
+            > table.laps-table {  
+                width: 100%;
+                display: block;
+                overflow-y: scroll; 
+                height: calc(100vh - 59.75px - 213.58px - 80px - 80px);
+                max-height: calc(100vh - 59.75px - 213.58px - 80px - 80px);
+        
+                border-spacing: 0;
+        
+                thead {
+                    position: sticky;
+                    top: 0;
+                    z-index: 1;
+                    th {
+                        width: 200px;
+                        height: 48px;
+                        
+                        position: relative;
+                        color: $text-color;
+                        border-right: 1px solid rgba(255, 255, 255, 0.2);
+                        
+                        &:last-child {
+                            border-right: none;
+                        }
+        
+                        .sort-button {
+                            position: absolute;
+                            right: 8px;
+                        }
+                    }
+                }
+                tbody {
+                    td {
+                        width: 200px;
+                        height: 48px;
+                        color: $text-color;
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+                        > span {
+                            color: $text-color;
+                        }
+                    }
+                }    
+            }
+            > div.button-list {
+                width: 100%;
+                button {
+                    width: 50%; 
+                    height: 80px;
+                    
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: $text-color;
+                }
+            }
+        }
+        > div#laps-record {
+            width: calc(100vw - 151px - 600px - 2px);
+            
+            > header {
+                padding: 24px 40px;
+                > h2 {
+                    color: $text-color;
+                }
+            }
+            
+            > div#record-list {    
+                overflow-y: scroll;
+                height: calc(100% - 115.42px);
+                > div.record {
+                    margin-bottom : 40px;
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+            
+        }
+    }
     > div.button-list {
         > button:first-child {
             margin-right: 12px;
